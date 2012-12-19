@@ -39,7 +39,7 @@ elif STATUS == "test":
     DATABASES = {
        'default': {
             'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': 'mealing',  # Or path to database file if using sqlite3.
+            'NAME': 'mealing_test',  # Or path to database file if using sqlite3.
             'USER': 'cacti',  # Not used with sqlite3.
             'PASSWORD': 'cacti',  # Not used with sqlite3.
             'HOST': 'localhost',  # Set to empty string for localhost. Not used with sqlite3.
