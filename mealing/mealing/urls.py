@@ -1,3 +1,13 @@
+#!/bin/env python
+# coding=utf-8
+''' url route definition.
+
+'''
+
+__author__ = 'pengxt <164504252@qq.com>'
+__status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
+
+
 from django.conf.urls import patterns, include, url
 
 # Uncomment the next two lines to enable the admin:

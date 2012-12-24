@@ -33,6 +33,8 @@ class Restaurant(models.Model):
     add_timestamp  = models.IntegerField(default = (lambda: int(time.time())), editable = False)
     
     class Meta:
+        """ meta class
+        """
         app_label = "mealing"
         verbose_name = u"餐厅"
         verbose_name_plural = u"餐厅"
@@ -41,6 +43,8 @@ class Restaurant(models.Model):
         return self.name
     
     def readable_add_timestamp(self):
+        """ readable timestamp string
+        """
         return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.add_timestamp))
     readable_add_timestamp.short_description = u"添加时间"
     
@@ -58,11 +62,15 @@ class Menu(models.Model):
     add_timestamp = models.IntegerField(default = (lambda: int(time.time())), editable = False)
     
     class Meta:
+        """ meta class
+        """
         app_label = "mealing"
         verbose_name = u"菜单"
         verbose_name_plural = u"菜单"
     
     def readable_add_timestamp(self):
+        """ readable timestamp string
+        """
         return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.add_timestamp))
     readable_add_timestamp.short_description = u"添加时间"
     
@@ -88,6 +96,8 @@ class MenuPrice(models.Model):
     add_timestamp = models.IntegerField(default = (lambda: int(time.time())), editable = False)
     
     class Meta:
+        """ meta class
+        """
         app_label = "mealing"
         verbose_name = u"菜单历史价格"
         verbose_name_plural = u"菜单历史价格"

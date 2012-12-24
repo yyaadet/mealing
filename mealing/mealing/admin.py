@@ -17,6 +17,7 @@ import time
 class RestaurantAdmin(admin.ModelAdmin):
     list_display = ("name", "phone1", "address", "tips", "readable_add_timestamp",)
     
+    
 class MenuAdmin(admin.ModelAdmin):
     list_display = ("name", "price", "readable_add_timestamp",)
 
