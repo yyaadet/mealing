@@ -118,6 +118,10 @@ INSTALLED_APPS = (
     'mealing',
 )
 
+if os.getenv('JENKINS_URL', False):
+    INSTALLED_APPS += ('django_jenkins', )
+    PROJECT_APPS = ('mealing_1.0', )
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
