@@ -12,14 +12,13 @@ import time
 
 class Restaurant(models.Model):
     """ A Restaurant object
-    
-    >>> Restaurant.objects.all()
+    >>> from mealing.models.restaurant import Restaurant
     
     #create some restaurants
-    #>>> r1 = Restaurant(name = u"test1", phone1 = u"12222", address = u"good", tips = u"test")
-    #>>> r1.save()
-    #>>> print r1
-    #'test1'
+    >>> r1 = Restaurant(name = u"test1", phone1 = u"12222", address = u"good", tips = u"test")
+    >>> r1.save()
+    >>> print r1
+    test1
     """
     name = models.CharField(blank = False, max_length = 60, verbose_name = u"名称")
     phone1 = models.CharField(blank = False, max_length = 60, verbose_name = u"电话")
@@ -40,3 +39,4 @@ class Restaurant(models.Model):
     def readable_add_timestamp(self):
         return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.add_timestamp))
     readable_add_timestamp.short_description = u"添加时间"
+    
