@@ -23,6 +23,8 @@ class Restaurant(models.Model):
     >>> r1.add_timestamp = 0
     >>> print r1.readable_add_timestamp()
     1970-01-01 08:00:00
+    >>> print r1.get_menu_num()
+    0
     """
     name = models.CharField(blank = False, max_length = 60, verbose_name = u"名称")
     phone1 = models.CharField(blank = False, max_length = 60, verbose_name = u"电话")
@@ -48,15 +50,31 @@ class Restaurant(models.Model):
         return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.add_timestamp))
     readable_add_timestamp.short_description = u"添加时间"
     
+    def get_menu_num(self):
+        """ get menu number
+        """
+        return Menu.objects.filter(restaurant = self.id).count()
+    get_menu_num.short_description = u"菜单数"
+    
 class Menu(models.Model):
     """ menu of restaurant
-    
-    >>> m = Menu(name = "aa", restaurant_id = 1)
+    >>> r = Restaurant(name = "rest")
+    >>> r.save()
+    >>> m = Menu(name = "aa", restaurant = r)
     >>> m.save()
     >>> print m
     aa
+    >>> print len(m.get_history_price())
+    0
+    >>> m.price = 10
+    >>> m.save()
+    >>> print len(m.get_history_price())
+    1
+    >>> print m.price
+    10
     """
-    restaurant_id = models.IntegerField(blank = False, verbose_name = u"餐厅id")
+    #restaurant_id = models.IntegerField(blank = False, verbose_name = u"餐厅id")
+    restaurant = models.ForeignKey("Restaurant", db_index = False, verbose_name = u"餐厅")
     name = models.CharField(blank = False, max_length = 60, verbose_name = u"菜名")
     price = models.IntegerField(default = 0, verbose_name = u"价格")
     add_timestamp = models.IntegerField(default = (lambda: int(time.time())), editable = False)
@@ -79,20 +97,44 @@ class Menu(models.Model):
         
         >>> r = Restaurant(name = "midl")
         >>> r.save()
-        >>> m = Menu(restaurant_id = r.id, name = "hanberge", price = 5)
+        >>> m = Menu(restaurant = r, name = "hanberge", price = 5)
         >>> print m.price
         5
+        >>> print m.get_restaurant()
+        midl
         """
-        return Restaurant.objects.get(id = self.restaurant_id)
+        return self.restaurant.name
+    get_restaurant.short_description = u"餐厅"
+    
+    def get_history_price(self):
+        return MenuPrice.objects.filter(menu = self.id)
+    
+    def save(self, force_insert=False, force_update=False, using=None):
+        """ save to db
+        >>> m = Menu()
+        """
+        if self.price > 0:
+            MenuPrice.objects.create(menu = self, price = self.price)
+        super(Menu, self).save(force_insert, force_update, using)
     
     def __str__(self):
         return self.name
     
+    def __unicode__(self):
+        return self.name
+    
 class MenuPrice(models.Model):
     """ menu history price list
+    >>> r = Restaurant.objects.create(name = "rest")
+    >>> m = Menu.objects.create(name = "menu", restaurant = r)
+    >>> m.price = 100
+    >>> m.save()
+    >>> mp = m.get_history_price()[0]
+    >>> print mp
+    menu: 100
     """
-    menu_id = models.IntegerField(blank = False)
-    price = models.IntegerField(default = 0)
+    menu = models.ForeignKey("Menu", db_index = False, editable = False)
+    price = models.IntegerField(default = 0, editable = False)
     add_timestamp = models.IntegerField(default = (lambda: int(time.time())), editable = False)
     
     class Meta:
@@ -101,6 +143,21 @@ class MenuPrice(models.Model):
         app_label = "mealing"
         verbose_name = u"菜单历史价格"
         verbose_name_plural = u"菜单历史价格"
+        
+    def get_menu_name(self):
+        return self.menu.name
+    get_menu_name.short_description = u"菜名"
     
+    def readable_add_timestamp(self):
+        """ readable timestamp string
+        """
+        return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.add_timestamp))
+    readable_add_timestamp.short_description = u"变更时间"
+    
+    def __unicode__(self):
+        return self.menu.name
+    
+    def __str__(self):
+        return "%s: %d" % (self.menu.name, self.price)
     
     

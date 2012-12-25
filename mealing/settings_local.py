@@ -49,3 +49,10 @@ elif STATUS == "test":
     }
     
     
+EMAIL_HOST = "mail.funshion.com"
+EMAIL_HOST_PASSWORD = ""
+EMAIL_HOST_USER = ""
+EMAIL_PORT = 25
+EMAIL_SUBJECT_PREFIX = "[mealing]"
+EMAIL_USE_TLS = False
+    

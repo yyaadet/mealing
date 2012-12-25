@@ -7,4 +7,4 @@
 
 '''
 
-from restaurant import Restaurant, Menu
+from restaurant import Restaurant, Menu, MenuPrice
