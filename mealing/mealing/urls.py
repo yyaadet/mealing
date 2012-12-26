@@ -1,7 +1,6 @@
 #!/bin/env python
 # coding=utf-8
 ''' url route definition.
-
 '''
 
 __author__ = 'pengxt <164504252@qq.com>'
@@ -16,7 +15,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'mealing.views.home', name='home'),
+    url(r'^$', 'mealing.views.index.index', name='home'),
     # url(r'^mealing/', include('mealing.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
@@ -28,6 +27,8 @@ urlpatterns = patterns('',
     url(r'^reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm'),
     url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete'),
     url(r'^admin/', include(admin.site.urls)),
+    
+    
     
 )
 

@@ -12,6 +12,7 @@ from django.test import TestCase
 from mealing.models import restaurant
 from mealing import models
 from mealing import admin
+from mealing.views import index
 
 """
 __test__ = {
@@ -25,3 +26,4 @@ class ModelsTest(TestCase):
         doctest.testmod(restaurant)
         doctest.testmod(models)
         doctest.testmod(admin)
+        doctest.testmod(index)
