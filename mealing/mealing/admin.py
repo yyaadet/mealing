@@ -10,7 +10,11 @@ __author__ = 'pengxt <164504252@qq.com>'
 __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django.contrib.auth.models import User as DjangoUser
 from mealing.models import Restaurant, Menu, MenuPrice
+from mealing.models import UserProfile
+from mealing.models import Order
 import time
 
 
@@ -21,7 +25,11 @@ class RestaurantAdmin(admin.ModelAdmin):
     
 class MenuAdmin(admin.ModelAdmin):
     list_display = ("name", "get_restaurant", "price", "readable_add_timestamp",)
-    search_fields = ["name"]
+    search_fields = ["name", ]
+    
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ("sponsor", "restaurant", "get_menus_string", "get_owners_string")
+    search_fields = ["sponsor", ]
     
     
 class MenuPriceAdmin(admin.ModelAdmin):
@@ -32,8 +40,23 @@ class MenuPriceAdmin(admin.ModelAdmin):
     
     def has_add_permission(self, request):
         return False
+
+# Define an inline admin descriptor for UserProfile model
+# which acts a bit like a singleton
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    can_delete = False
+    verbose_name_plural = 'profile'
+
+# Define a new User admin
+class UserAdmin(DjangoUserAdmin):
+    inlines = (UserProfileInline, )
     
     
 admin.site.register(Restaurant, RestaurantAdmin)
 admin.site.register(Menu, MenuAdmin)
 admin.site.register(MenuPrice, MenuPriceAdmin)
+# Re-register UserAdmin
+admin.site.unregister(DjangoUser)
+admin.site.register(DjangoUser, UserAdmin)
+admin.site.register(Order, OrderAdmin)

@@ -111,11 +111,10 @@ class Menu(models.Model):
     
     def save(self, force_insert=False, force_update=False, using=None):
         """ save to db
-        >>> m = Menu()
         """
+        super(Menu, self).save(force_insert, force_update, using)
         if self.price > 0:
             MenuPrice.objects.create(menu = self, price = self.price)
-        super(Menu, self).save(force_insert, force_update, using)
     
     def __str__(self):
         return self.name
