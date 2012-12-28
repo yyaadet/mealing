@@ -6,12 +6,15 @@
 from django.conf import settings
 from django.shortcuts import render_to_response
 
-def render_template(*args, **kwargs):
+def render_template(template, kwargs = {}):
     """ render template
     >>> render_template("index.html")
     """
-    if (not kwargs.has_key("settings")):
-        kwargs["settings"] = settings
+    new_kwargs = {"settings": settings}
+    if kwargs.has_key("settings"):
+        kwargs.pop("settings")
         
-    return render_to_response(args, kwargs)
+    new_kwargs.update(kwargs)
+    
+    return render_to_response(template, new_kwargs)
     

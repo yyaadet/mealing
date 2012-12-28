@@ -1,15 +1,13 @@
 #!/bin/env python
 # coding=utf-8
 ''' models definition.
-
 >>> from restaurant import Restaurant, Menu
-
-
 '''
 
 from restaurant import Restaurant, Menu, MenuPrice
 from order import Order
 from user import UserProfile
+from config import Config
 
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save

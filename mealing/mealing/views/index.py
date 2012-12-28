@@ -13,5 +13,7 @@ def index(request):
     >>> resp = c.get("/")
     >>> print resp.status_code
     200
+    >>> print (resp.context["settings"] != None)
+    True
     """
     return render_template("index.html")

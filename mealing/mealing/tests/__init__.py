@@ -12,10 +12,16 @@ from django.test import TestCase
 from mealing.models import restaurant
 from mealing.models import order
 from mealing.models import user
+from mealing.models import config
+# models
 from mealing import models
+# admin
 from mealing import admin
+# views
 from mealing.views import index
-
+from mealing.views import user as userview
+# forms
+from mealing.forms import user as userform
 
 class ModelsTest(TestCase):
     def test_models(self):
@@ -25,3 +31,6 @@ class ModelsTest(TestCase):
         doctest.testmod(models)
         doctest.testmod(admin)
         doctest.testmod(index)
+        doctest.testmod(userview)
+        doctest.testmod(config)
+        doctest.testmod(userform)

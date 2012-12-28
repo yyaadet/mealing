@@ -15,6 +15,7 @@ from django.contrib.auth.models import User as DjangoUser
 from mealing.models import Restaurant, Menu, MenuPrice
 from mealing.models import UserProfile
 from mealing.models import Order
+from mealing.models import Config
 import time
 
 
@@ -30,6 +31,14 @@ class MenuAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ("sponsor", "restaurant", "get_menus_string", "get_owners_string")
     search_fields = ["sponsor", ]
+    
+    def has_add_permission(self, request):
+        return False
+    
+class ConfigAdmin(admin.ModelAdmin):
+    
+    def has_add_permission(self, request):
+        return False
     
     
 class MenuPriceAdmin(admin.ModelAdmin):
@@ -60,3 +69,4 @@ admin.site.register(MenuPrice, MenuPriceAdmin)
 admin.site.unregister(DjangoUser)
 admin.site.register(DjangoUser, UserAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(Config, ConfigAdmin)

@@ -16,6 +16,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'mealing.views.index.index', name='home'),
+    url(r"^login/$", "mealing.views.user.login", name = "login"),
     # url(r'^mealing/', include('mealing.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

@@ -1,0 +1,9 @@
+[
+    {
+        "model": "mealing.Config",
+        "pk": 1,
+        "fields": {
+            "per_capita_fee": 30
+        }
+    }
+]
