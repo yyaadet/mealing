@@ -1,12 +1,13 @@
 #!/bin/env python
 # coding=utf-8
 '''User need to modify it. 
-
 '''
 
 __author__ = 'pengxt <164504252@qq.com>'
 __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 
+
+import os
 
 STATUS = "test"  # test, dev, pro
 
@@ -48,6 +49,8 @@ elif STATUS == "test":
             'TEST_CHARSET': "utf8",
         }
     }
+    SESSION_ENGINE = "django.contrib.sessions.backends.file"
+    SESSION_FILE_PATH = os.path.join(os.path.dirname(__file__), "session").replace("\\", "/")
     
     
 EMAIL_HOST = "mail.funshion.com"
