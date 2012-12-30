@@ -4,6 +4,7 @@
 '''
 
 from django.shortcuts import render_to_response
+from django.contrib.auth import authenticate
 from mealing.views.decorator import render_template
 from mealing.forms import LoginForm
 from mealing.forms.base import DivErrorList
