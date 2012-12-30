@@ -8,7 +8,7 @@ __author__ = 'pengxt <164504252@qq.com>'
 __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 
 
-STATUS = "dev"  # test, dev, pro
+STATUS = "test"  # test, dev, pro
 
 DATABASES = {
     'default': {
@@ -40,11 +40,12 @@ elif STATUS == "test":
     DATABASES = {
        'default': {
             'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': 'mealing_test',  # Or path to database file if using sqlite3.
+            'NAME': 'mealing',  # Or path to database file if using sqlite3.
             'USER': 'cacti',  # Not used with sqlite3.
             'PASSWORD': 'cacti',  # Not used with sqlite3.
             'HOST': 'localhost',  # Set to empty string for localhost. Not used with sqlite3.
             'PORT': '',  # Set to empty string for default. Not used with sqlite3.
+            'TEST_CHARSET': "utf8",
         }
     }
     

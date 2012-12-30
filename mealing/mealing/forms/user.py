@@ -16,7 +16,12 @@ class LoginForm(forms.Form):
     >>> err = f["username"].errors.__unicode__()
     >>> print err.find("div") > -1
     True
+    >>> f1 = LoginForm(data)
+    >>> print f1.as_table().find("text-error") > -1
+    True
     """
+    error_css_class = "text-error"
+    required_css_class= "text-error"
     username = forms.CharField(max_length = 30, required = True)
     password = forms.CharField(max_length = 30, required = True, widget = forms.PasswordInput)
     is_remember = forms.BooleanField()

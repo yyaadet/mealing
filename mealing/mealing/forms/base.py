@@ -17,11 +17,3 @@ class DivErrorList(ErrorList):
     
     def as_ul(self):
         return self.as_divs()
-    
-""" unused codes
-class BaseForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        kwargs_new = {'error_class': DivErrorList}
-        kwargs_new.update(kwargs)
-        super(BaseForm, self).__init__(self, *args, **kwargs_new)
-"""

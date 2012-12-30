@@ -23,6 +23,6 @@ def login(request):
         if form.is_valid():
             pass
     else:
-        form = LoginForm(error_class = DivErrorList)
+        form = LoginForm()
         
     return render_template("login.html", {"form": form})
