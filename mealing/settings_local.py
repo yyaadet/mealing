@@ -8,8 +8,10 @@ __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 
 
 import os
+import logging
 
-STATUS = "test"  # test, dev, pro
+
+STATUS = "dev"  # test, dev, pro
 
 DATABASES = {
     'default': {
@@ -24,6 +26,16 @@ DATABASES = {
 
 CACHE_BACKEND = 'memcached://192.168.16.205:11211/?max_entries=2048&timeout=5&cull_percentage=10'
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+#for logging
+LOG_FILENAME = "mealing.debug.log"
+LEVEL = logging.DEBUG
+logging.basicConfig(
+    filename=os.path.join(os.path.dirname(__file__), LOG_FILENAME),
+    level = LEVEL,
+    format='%(pathname)s TIME: %(asctime)s MSG: %(filename)s:%(funcName)s:%(lineno)d %(message)s',
+)
+
 
 if STATUS == "dev" :
     DATABASES = {
