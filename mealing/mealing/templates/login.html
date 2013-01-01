@@ -3,6 +3,7 @@
 {% block content %}
 
 <form action="{% url login %}" method="post" class="form-horizontal">
+    {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="control-group">
 	    <label class="control-label">用户名</label>
@@ -19,7 +20,7 @@
     <div class="control-group">
 	    <div class="controls">
 	      <label class="checkbox">
-	      	{{ form.is_remember }} 记住我
+	      	{{ form.is_remember }} 记住我 {{ form.is_remember.errors }}
 	      </label>
 	      <button type="submit" class="btn">登 录</button>
 	    </div>

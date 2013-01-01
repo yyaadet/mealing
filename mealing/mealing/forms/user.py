@@ -24,4 +24,4 @@ class LoginForm(forms.Form):
     required_css_class= "text-error"
     username = forms.CharField(max_length = 30, required = True)
     password = forms.CharField(max_length = 30, required = True, widget = forms.PasswordInput)
-    is_remember = forms.BooleanField()
+    is_remember = forms.BooleanField(required = False)
