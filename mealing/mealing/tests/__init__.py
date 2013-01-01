@@ -1,7 +1,6 @@
 #!/bin/env python
 # coding=utf-8
 '''test definition.
-
 '''
 
 __author__ = 'pengxt <164504252@qq.com>'
