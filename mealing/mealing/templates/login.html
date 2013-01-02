@@ -4,7 +4,7 @@
 
 <form action="{% url login %}" method="post" class="form-horizontal">
     {% csrf_token %}
-    {{ form.non_field_errors }}
+    {{ form.custom_error }}
     <div class="control-group">
 	    <label class="control-label">用户名</label>
 	    <div class="controls">

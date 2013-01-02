@@ -1,4 +1,5 @@
 {% load static %}
+{% load common %}
 
 <!DOCTYPE html>
 <html>
@@ -9,18 +10,12 @@
   {% endblock %}
   <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
   <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
 </head>
 <body>
    <div class="container">
       {% block header %} {% include "header.html" %}{% endblock %}
-      {% block nav %}
-      <ul class="nav nav-tabs">
-          <li class="active"><a href="#">主页</a></li>
-          <li><a href="#">今日订餐</a></li>
-          <li><a href="#">我要订餐</a>
-      </ul> 
-      {% endblock %}
+      {% nav "主页" %}
       {% block content %} {% endblock %}
       {% block footer %}{% include "footer.html" %}{% endblock %}
   </div>

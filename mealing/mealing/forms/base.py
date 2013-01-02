@@ -5,6 +5,7 @@
 
 from django.forms.util import ErrorList
 from django import forms
+from django.utils.safestring import mark_safe
 
 class DivErrorList(ErrorList):
     def __unicode__(self):
@@ -17,3 +18,15 @@ class DivErrorList(ErrorList):
     
     def as_ul(self):
         return self.as_divs()
+    
+class BasisForm(forms.Form):
+    """ basis form class.
+    """
+    _custom_error = u""
+    
+    @property
+    def custom_error(self):
+        return mark_safe(u"<div class=\"alert\">%s</div>" % self._custom_error)
+    
+    def set_custom_error(self, msg):
+        self._custom_error = msg

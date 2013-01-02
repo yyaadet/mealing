@@ -4,9 +4,10 @@
 '''
 
 from django import forms
+import base
 
 
-class LoginForm(forms.Form):
+class LoginForm(base.BasisForm):
     """ user login form.
     >>> from mealing.forms.base import DivErrorList
     >>> data = {"username": ""}

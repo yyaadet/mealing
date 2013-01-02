@@ -1,0 +1,9 @@
+<ul class="nav nav-tabs">
+{% for tab in tabs %}
+    {% if tab.is_active %}
+    <li class="active"><a href="#">{{ tab.name }}</a></li>
+    {% else %}     
+    <li><a href="{{ tab.url }}">{{ tab.name }}</a></li>
+    {% endif %}
+ {% endfor %} 
+ </ul>

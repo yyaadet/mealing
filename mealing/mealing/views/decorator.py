@@ -25,4 +25,3 @@ def render_template(template, kwargs = {}, request = None):
         instance = RequestContext(request)
         return render_to_response(template, new_kwargs, context_instance = instance)
     return render_to_response(template, new_kwargs)
-    

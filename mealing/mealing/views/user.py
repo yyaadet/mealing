@@ -11,6 +11,9 @@
 200
 >>> print resp.context["form"] != None
 True
+>>> resp = c.post("/login/", {"username": "1111", "password": "222"})
+>>> print (resp.context["form"].custom_error != "")
+True
 >>> u = DjangoUser.objects.create_user("loginu", "u1@funshion.com", "1111")
 >>> resp = c.post("/login/", {"username": "loginu", "password": "1111"})
 >>> print resp.status_code 
@@ -34,6 +37,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as djangologin
 from django.contrib.auth import logout as djlogout
 from django.contrib.auth.models import User as DjangoUser
+from django import forms
 from mealing.views.decorator import render_template
 from mealing.views import index
 from mealing.forms import LoginForm
@@ -57,15 +61,11 @@ def login(request):
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
             is_remember = form.cleaned_data["is_remember"]
-            if DjangoUser.objects.get(username = username) == None:
-                form.errors["status"] = u"用户名不存在"
-                logger.info("not found user")
-                return render_template("login.html", {"form": form})
             user = authenticate(username = username, password = password)
             if user == None:
-                form.errors["status"] = u"密码错误"
-                logger.info("user's password is error")
-                return render_template("login.html", {"form": form})
+                form.set_custom_error(u"用户不存在或是密码错误")
+                logger.info("user's password is error: %s" % form.non_field_errors())
+                return render_template("login.html", {"form": form}, request)
             djangologin(request, user)
             return redirect("/")
         else:

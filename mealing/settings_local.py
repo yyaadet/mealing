@@ -11,7 +11,7 @@ import os
 import logging
 
 
-STATUS = "dev"  # test, dev, pro
+STATUS = "test"  # test, dev, pro
 
 DATABASES = {
     'default': {
@@ -61,8 +61,7 @@ elif STATUS == "test":
             'TEST_CHARSET': "utf8",
         }
     }
-    SESSION_ENGINE = "django.contrib.sessions.backends.file"
-    SESSION_FILE_PATH = os.path.join(os.path.dirname(__file__), "session").replace("\\", "/")
+    CACHE_BACKEND = 'memcached://localhost:11211/?max_entries=2048&timeout=5&cull_percentage=10'
     
     
 EMAIL_HOST = "mail.funshion.com"
