@@ -1,0 +1,11 @@
+<div class="pagination pagination-right">
+  <ul>
+  {% for i in pager.paginator.page_range %}
+      {% if i == pager.number %}
+      <li class="active"><a href="{{prefix}}/{{i}}/">{{ i }}</a></li> 
+      {% else %}
+      <li><a href="{{prefix}}/{{i}}/">{{ i }}</a></li>
+      {% endif %}
+  {% endfor %}
+  </ul>
+</div>

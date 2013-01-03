@@ -13,7 +13,7 @@ __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 
 register = template.Library()
 
-@register.tag(name = "nav")
+
 def do_nav(parser, token):
     """ show navigate at header of page.
     """
@@ -22,8 +22,7 @@ def do_nav(parser, token):
         tag_name, format_string = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError("%r tag requires a single argument" % token.contents.split()[0]) 
-    if (not (format_string[0] == format_string[-1] and format_string[0] in ('"', "'"))) and \
-            (not (format_string[1] == format_string[-1] and format_string[0] == 'u')):
+    if not (format_string[0] == format_string[-1] and format_string[0] in ('"', "'")):
         raise template.TemplateSyntaxError("%r tag's argument should be in quotes" % tag_name)
     return NavNode(format_string[1:-1])
 
@@ -38,6 +37,7 @@ class NavNode(template.Node):
         """
         self._cur_tab = cur_tab
         self._tabs = [{"name": u"主页", "url": "/"},
+                           {"name": u"餐厅", "url": "/restaurant/all/"},
                            {"name": u"排行榜", "url": "#"},
                            {"name": u"今日订餐", "url": "#"},
                       ]
@@ -54,3 +54,36 @@ class NavNode(template.Node):
         logging.debug("tabs: %s\ncurrent tab: %s" % (tabs, self._cur_tab))
         new_context = Context({'tabs': tabs}, autoescape=context.autoescape)
         return t.render(new_context)
+    
+def do_pagination(parser, token):
+    """ pagination at bottom
+    """
+    try:
+        # split_contents() knows not to split quoted strings.
+        tag_name, pager, prefix = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError("%r tag requires two argument" % token.contents.split()[0]) 
+    return PaginationNode(pager, prefix)
+
+class PaginationNode(template.Node):
+    """ pagination node.
+    """
+    def __init__(self, pager, prefix):
+        """ init pagination node.
+        Args:
+            pager: Paginator.page() object
+            prefix: url prefix
+        """
+        self._pager = template.Variable(pager)
+        self._prefix = prefix
+    
+    def render(self, context):
+        """ render pagination from template.
+        """
+        t = template.loader.get_template("tags/pagination.html")
+        new_context = Context({"pager": self._pager.resolve(context), "prefix": self._prefix}, 
+                              autoescape=context.autoescape)
+        return t.render(new_context)
+
+register.tag("nav", do_nav)
+register.tag("pagination", do_pagination)

@@ -27,7 +27,9 @@ LIST_OF_DOCTESTS = [
     "mealing.views.restaurant",
     # forms
     "mealing.forms.user",
-    "mealing.forms.base"
+    "mealing.forms.base",
+    # templatetags
+    "mealing.templatetags.common",
 ]
 
 LIST_OF_UNITTESTS = [

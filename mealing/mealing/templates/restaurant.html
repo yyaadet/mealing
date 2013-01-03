@@ -1,8 +1,22 @@
 {% extends "base.html" %}
+{% load static %}
 {% load common %}
 
 {% block tabs %} {% nav "主页" %} {% endblock %}
 
 {% block content %}
-meal order
+
+{% for rest in restaurants_page.object_list %}
+<ul class="thumbnails">
+  <li class="span3">
+    <div class="thumbnail">
+      <img data-src="{% static 'js/holder.js/260x180/text:Mealing' %}" alt="">
+      <h3>{{rest.name}}</h3>
+      <p>地址：{{rest.address}}</p>
+    </div>
+  </li>
+</ul>
+{% endfor %}
+
+{% pagination restaurants_page /restaurant/all %}
 {% endblock %}
