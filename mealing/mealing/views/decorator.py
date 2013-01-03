@@ -7,6 +7,9 @@
 200
 '''
 
+__author__ = 'pengxt <164504252@qq.com>'
+__status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
+
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext

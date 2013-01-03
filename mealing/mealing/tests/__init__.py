@@ -24,6 +24,7 @@ LIST_OF_DOCTESTS = [
     "mealing.views.decorator",
     "mealing.views.home",
     "mealing.views.user",
+    "mealing.views.restaurant",
     # forms
     "mealing.forms.user",
     "mealing.forms.base"

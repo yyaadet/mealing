@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^$', 'mealing.views.home.index', name='home'),
     url(r"^login/$", "mealing.views.user.login", name = "login"),
     url(r"^logout/$", "mealing.views.user.logout", name = "logout"),
+    url(r"^restaurant/$", "mealing.views.restaurant.all", name = "restaurant_all"),
     # url(r'^mealing/', include('mealing.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

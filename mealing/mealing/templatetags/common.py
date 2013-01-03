@@ -8,6 +8,9 @@ from django.template import Context
 import logging
 
 
+__author__ = 'pengxt <164504252@qq.com>'
+__status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
+
 register = template.Library()
 
 @register.tag(name = "nav")
@@ -36,6 +39,7 @@ class NavNode(template.Node):
         self._cur_tab = cur_tab
         self._tabs = [{"name": u"主页", "url": "/"},
                            {"name": u"排行榜", "url": "#"},
+                           {"name": u"今日订餐", "url": "#"},
                       ]
         
     def render(self, context):

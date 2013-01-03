@@ -22,10 +22,12 @@ class DivErrorList(ErrorList):
 class BasisForm(forms.Form):
     """ basis form class.
     """
-    _custom_error = u""
+    _custom_error = ""
     
     @property
     def custom_error(self):
+        if self._custom_error == "":
+            return ""
         return mark_safe(u"<div class=\"alert\">%s</div>" % self._custom_error)
     
     def set_custom_error(self, msg):

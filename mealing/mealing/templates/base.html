@@ -15,7 +15,7 @@
 <body>
    <div class="container">
       {% block header %} {% include "header.html" %}{% endblock %}
-      {% nav "主页" %}
+      {% block tabs %} {% nav "主页" %} {% endblock %}
       {% block content %} {% endblock %}
       {% block footer %}{% include "footer.html" %}{% endblock %}
   </div>
