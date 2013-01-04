@@ -23,6 +23,7 @@ class BasisForm(forms.Form):
     """ basis form class.
     """
     _custom_error = ""
+    _success_tips = ""
     
     @property
     def custom_error(self):
@@ -32,3 +33,9 @@ class BasisForm(forms.Form):
     
     def set_custom_error(self, msg):
         self._custom_error = msg
+        
+    @property
+    def success_tips(self):
+        if self._success_tips == "":
+            return ""
+        return mark_safe(u"<div class=\"alert alert-success\">%s</div>" % self._success_tips)

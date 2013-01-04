@@ -43,6 +43,20 @@ True
 200
 >>> print resp.context["form"].custom_error != ""
 True
+
+# test change_password()
+>>> c.login(username = "loginu", password = "1111")
+True
+>>> resp = c.post("/change_password/", {"old_password": "2222", "new_password": "111", "new_password1": "333"})
+>>> print resp.context["form"].custom_error != ""
+True
+>>> resp = c.post("/change_password/", {"old_password": "1111", "new_password": "111", "new_password1": "333"})
+>>> print resp.context["form"].custom_error != ""
+True
+>>> resp = c.post("/change_password/", {"old_password": "1111", "new_password": "3333", "new_password1": "3333"})
+>>> c.logout()
+>>> print c.login(username = "loginu", password = "3333")
+True
 '''
 
 from django.views.decorators.csrf import csrf_protect
@@ -132,7 +146,17 @@ def change_password(request):
     if request.method == "POST":
         form = ChangePasswordForm(request.POST)
         if form.is_valid():
-            pass
+            old_password = form.cleaned_data["old_password"]
+            new_password = form.cleaned_data["new_password"]
+            new_password1 = form.cleaned_data["new_password1"]
+            if request.user.check_password(old_password):
+                form.set_custom_error(u"密码不对")
+                return render_template("change_password.html", {"form": form}, request)
+            if new_password != new_password1:
+                form.set_custom_error(u"两次输入密码不一致")
+                return render_template("change_password.html", {"form": form}, request)
+            request.user.set_password(new_password)
+            request.user.save()
     else:
         form= ChangePasswordForm()
     return render_template("change_password.html", {"form": form}, request)
