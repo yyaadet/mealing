@@ -3,4 +3,4 @@
 ''' all forms.
 '''
 
-from user import LoginForm
+from user import LoginForm, RegisterForm, ChangePasswordForm

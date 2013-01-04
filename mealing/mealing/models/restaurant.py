@@ -27,9 +27,9 @@ class Restaurant(models.Model):
     0
     """
     name = models.CharField(blank = False, max_length = 60, verbose_name = u"名称")
-    phone1 = models.CharField(blank = False, max_length = 60, verbose_name = u"电话")
-    phone2 = models.CharField(blank = True, null = True, max_length = 60, verbose_name = u"电话")
-    phone3 = models.CharField(blank = True, null = True, max_length = 60, verbose_name = u"电话")
+    phone1 = models.CharField(blank = False, max_length = 60, verbose_name = u"电话1")
+    phone2 = models.CharField(blank = True, null = True, max_length = 60, verbose_name = u"电话2")
+    phone3 = models.CharField(blank = True, null = True, max_length = 60, verbose_name = u"电话3")
     address = models.CharField(blank = False, max_length = 300, verbose_name = u"联系地址")
     tips = models.TextField(blank = False, max_length = 1024, verbose_name = u"友情提示")
     add_timestamp  = models.IntegerField(default = (lambda: int(time.time())), editable = False)

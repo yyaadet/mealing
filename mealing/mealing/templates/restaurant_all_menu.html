@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+{% load common %}
+
+{% block tabs %} {% nav "餐厅" %} {% endblock %}
+
+{% block content %}
+
+<ul class="breadcrumb">
+  <li><a href="{% url restaurant_all 1%}">全部餐厅</a> <span class="divider">/</span></li>
+  <li class="active">{{restaurant_name}}</li>
+</ul>
+
+<table class="table table-striped">
+	<tr>
+		<th>菜单名</th>
+		<th>价格</th>
+	</tr>
+	{% for menu in menus_page %}
+	<tr>
+		<td>{{menu.name}}</td>
+		<td>￥{{menu.price}}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+{% pagination menus_page prefix %}
+{% endblock %}

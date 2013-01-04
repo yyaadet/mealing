@@ -11,7 +11,7 @@ import os
 import logging
 
 
-STATUS = "test"  # test, dev, pro
+STATUS = "dev"  # test, dev, pro
 
 DATABASES = {
     'default': {

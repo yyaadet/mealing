@@ -28,6 +28,21 @@ True
 >>> resp = c.get("/logout/")
 >>> print resp.status_code
 302
+
+# test register()
+>>> c.logout()
+>>> resp = c.get("/register/")
+>>> print resp.status_code
+200
+>>> resp = c.post("/register/", {"username": "t11111", "password": "1111", "email": "pengxt@funshion.com"})
+>>> print resp.status_code
+302
+>>> c.logout()
+>>> resp = c.post("/register/", {"username": "t11111", "password": "1111", "email": "pengxt@funshion.com"})
+>>> print resp.status_code
+200
+>>> print resp.context["form"].custom_error != ""
+True
 '''
 
 from django.views.decorators.csrf import csrf_protect
@@ -36,11 +51,12 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as djangologin
 from django.contrib.auth import logout as djlogout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User as DjangoUser
 from django import forms
 from mealing.views.decorator import render_template
 from mealing.views import index
-from mealing.forms import LoginForm
+from mealing.forms import LoginForm, RegisterForm, ChangePasswordForm
 from mealing.forms.base import DivErrorList
 import logging
 
@@ -80,3 +96,43 @@ def logout(request):
     """
     djlogout(request)
     return redirect("/")
+
+def register(request):
+    """ user register view
+    """
+    if request.user.is_authenticated():
+        return redirect("/")
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+            email = form.cleaned_data["email"]
+            if DjangoUser.objects.filter(username = username).count() > 0:
+                form.set_custom_error(u"用户名或已被他人注册")
+                return render_template("register.html", {"form": form}, request)
+            try:
+                user = DjangoUser.objects.create_user(username, email, password)
+            except Exception, e:
+                logging.warn("failed to register: %s" % e)
+                form.set_custom_error(u"系统发生故障")
+                return render_template("register.html", {"form": form}, request)
+            user = authenticate(username = username, password = password)
+            djangologin(request, user)
+            return redirect("/")
+    else:
+        form = RegisterForm()
+        
+    return render_template("register.html", {"form": form}, request)
+
+@login_required
+def change_password(request):
+    """ change user password
+    """
+    if request.method == "POST":
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            pass
+    else:
+        form= ChangePasswordForm()
+    return render_template("change_password.html", {"form": form}, request)

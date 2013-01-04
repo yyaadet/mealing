@@ -26,3 +26,17 @@ class LoginForm(base.BasisForm):
     username = forms.CharField(max_length = 30, required = True)
     password = forms.CharField(max_length = 30, required = True, widget = forms.PasswordInput)
     is_remember = forms.BooleanField(required = False)
+    
+class RegisterForm(base.BasisForm):
+    """user register form
+    """
+    username = forms.CharField(max_length = 30)
+    password = forms.CharField(max_length = 30, widget = forms.PasswordInput)
+    email = forms.EmailField(max_length = 60)
+    
+class ChangePasswordForm(base.BasisForm):
+    """ user change password form
+    """
+    old_password = forms.CharField(max_length = 30, widget = forms.PasswordInput)
+    new_password = forms.CharField(max_length = 30, widget = forms.PasswordInput)
+    new_password1 = forms.CharField(max_length = 30, widget = forms.PasswordInput)

@@ -2,21 +2,39 @@
 {% load static %}
 {% load common %}
 
-{% block tabs %} {% nav "主页" %} {% endblock %}
+{% block tabs %} {% nav "餐厅" %} {% endblock %}
 
 {% block content %}
 
+<div class="row">
 {% for rest in restaurants_page.object_list %}
+<div class="span3">
 <ul class="thumbnails">
   <li class="span3">
     <div class="thumbnail">
       <img data-src="{% static 'js/holder.js/260x180/text:Mealing' %}" alt="">
       <h3>{{rest.name}}</h3>
-      <p>地址：{{rest.address}}</p>
+      <p>
+      	{% if rest.tips %}
+      	{{rest.tips}} <br />
+      	{% endif %}
+      	地址：{{rest.address}} <br />
+      	电话1：{{rest.phone1}} <br />
+      	{% if rest.phone2 %}
+      	电话2：{{rest.phone2}} <br />
+      	{% endif %}
+      	{% if rest.phone3 %}
+      	电话2：{{rest.phone3}} <br />
+      	{% endif %}
+      	共有 {{rest.get_menu_num}} 种菜单
+      </p>
+      <a href="{% url restaurant_all_menu rest.id rest.name 1 %}" class="btn btn-mini">查看菜单</a>
     </div>
   </li>
 </ul>
+</div>
 {% endfor %}
+</div>
 
-{% pagination restaurants_page /restaurant/all %}
+{% pagination restaurants_page "/restaurant/all" %}
 {% endblock %}

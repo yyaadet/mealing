@@ -63,6 +63,8 @@ def do_pagination(parser, token):
         tag_name, pager, prefix = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError("%r tag requires two argument" % token.contents.split()[0]) 
+    if prefix[0] != prefix[-1] and prefix[0] in ('"', "'"):
+        raise template.TemplateSyntaxError("%r tag's second argument should be in quotes" % tag_name)
     return PaginationNode(pager, prefix)
 
 class PaginationNode(template.Node):
@@ -75,13 +77,13 @@ class PaginationNode(template.Node):
             prefix: url prefix
         """
         self._pager = template.Variable(pager)
-        self._prefix = prefix
+        self._prefix = template.Variable(prefix)
     
     def render(self, context):
         """ render pagination from template.
         """
         t = template.loader.get_template("tags/pagination.html")
-        new_context = Context({"pager": self._pager.resolve(context), "prefix": self._prefix}, 
+        new_context = Context({"pager": self._pager.resolve(context), "prefix": self._prefix.resolve(context)}, 
                               autoescape=context.autoescape)
         return t.render(new_context)
 

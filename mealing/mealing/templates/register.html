@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="{% url register %}" method="post" class="form-horizontal">
+    {% csrf_token %}
+    {{ form.custom_error }}
+    <div class="control-group">
+	    <label class="control-label">用户名</label>
+	    <div class="controls">
+	      {{ form.username }} {{form.username.errors}}
+	    </div>
+  	</div>    
+    <div class="control-group">
+	    <label class="control-label" for="inputPassword">密码</label>
+	    <div class="controls">
+	      {{ form.password }} {{ form.password.errors }}
+	    </div>
+    </div>
+    <div class="control-group">
+	    <label class="control-label">Email</label>
+	    <div class="controls">
+	      {{ form.email }} {{ form.email.errors }}
+	    </div>
+    </div>
+    <div class="control-group">
+	    <div class="controls">
+	      <button type="submit" class="btn">注册</button>
+	    </div>
+  	</div>
+</form>
+
+{% endblock %}
