@@ -39,3 +39,6 @@ class BasisForm(forms.Form):
         if self._success_tips == "":
             return ""
         return mark_safe(u"<div class=\"alert alert-success\">%s</div>" % self._success_tips)
+    
+    def set_success_tips(self, tips):
+        self._success_tips = tips
