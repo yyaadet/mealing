@@ -56,8 +56,6 @@ True
 >>> resp = c.post("/change_password/", {"old_password": "1111", "new_password": "3333", "new_password1": "3333"})
 >>> print resp.status_code
 200
->>> print resp.context["form"].custom_error == u"两次输入密码不一致"
-True
 >>> print resp.context["form"].success_tips != ""
 True
 >>> c.logout()
@@ -156,11 +154,13 @@ def change_password(request):
             old_password = form.cleaned_data["old_password"]
             new_password = form.cleaned_data["new_password"]
             new_password1 = form.cleaned_data["new_password1"]
-            if request.user.check_password(old_password):
+            if request.user.check_password(old_password) == False:
                 form.set_custom_error(u"密码不对")
+                logging.debug("old password error")
                 return render_template("change_password.html", {"form": form}, request)
             if new_password != new_password1:
                 form.set_custom_error(u"两次输入密码不一致")
+                logging.debug("password is not same")
                 return render_template("change_password.html", {"form": form}, request)
             request.user.set_password(new_password)
             form.set_success_tips(u"修改成功")
