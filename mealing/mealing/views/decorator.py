@@ -13,6 +13,8 @@ __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.http import HttpResponse, HttpResponseForbidden, Http404
+from django.utils import simplejson
 
 def render_template(template, kwargs = {}, request = None):
     """ render template
@@ -28,3 +30,17 @@ def render_template(template, kwargs = {}, request = None):
         instance = RequestContext(request)
         return render_to_response(template, new_kwargs, context_instance = instance)
     return render_to_response(template, new_kwargs)
+
+
+def render_json(view_func):
+    """ render http response to json decorator
+    """
+    def wrap(request, *args, **kwargs):
+        retval = view_func(request, *args, **kwargs)
+        if isinstance(retval, HttpResponse):
+            retval.mimetype = 'application/json'
+            return retval
+        else:
+            json = simplejson.dumps(retval)
+            return HttpResponse(json, mimetype='application/json')
+    return wrap

@@ -26,6 +26,10 @@ urlpatterns = patterns('',
     url(r"^restaurant/menu/(?P<restaurant_id>\d+)/(?P<restaurant_name>\w+)/(?P<page>\d+)/$", "mealing.views.restaurant.all_menu", 
         name = "restaurant_all_menu"),
     url(r"^restaurant/menu/(?P<restaurant_id>\d+)/(?P<restaurant_name>\w+)/$", "mealing.views.restaurant.all_menu"),
+    
+    url(r"^menu/check/(?P<menu_id>\d+)/$", "mealing.views.menu.check", name = "menu_check"),
+    
+    url(r"^order/ready/$", "mealing.views.order.ready", name = "order_ready"),
     # url(r'^mealing/', include('mealing.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

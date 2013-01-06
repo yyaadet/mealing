@@ -11,18 +11,53 @@
   <li class="active">{{restaurant_name}}</li>
 </ul>
 
+
+
 <table class="table table-striped">
 	<tr>
 		<th>菜单名</th>
 		<th>价格</th>
+		<th>选择</th>
 	</tr>
-	{% for menu in menus_page %}
+	{% for menu in menus_page.object_list %}
 	<tr>
 		<td>{{menu.name}}</td>
 		<td>￥{{menu.price}}</td>
+		<td><label class="checkbox">
+			{% if menu.id in request.session.menus %}
+			<input type="checkbox" value="{{menu.name}}" onclick="check_menu(this, '{{menu.id}}')" checked="checked" />勾选</label>
+			{% else %}
+			<input type="checkbox" value="{{menu.name}}" onclick="check_menu(this, '{{menu.id}}')" />勾选</label>
+			{% endif %}
+		</td>
 	</tr>
 	{% endfor %}
 </table>
 
 {% pagination menus_page prefix %}
+
+<div class="row">
+    <div class="span2 offset6"><a href="{% url order_ready %}" class="btn btn-large btn-primary">提交订餐</a></div>
+</div>
+
+<br />
+
+<div class="alert fade" id="alert_box">
+	some error here
+</div>	
+
+<script type="text/javascript">
+
+function check_menu(checkbox, menu_id) {
+	$.getJSON("/menu/check/" + menu_id + "/", {}, function(data){
+		if (!data.is_ok) {
+			$("#alert_box").attr("class", "alert alert-error");
+			$("#alert_box").html(data.reason);
+		} else {
+			$("#alert_box").attr("class", "alert alert-success");
+			$("#alert_box").html("成功选择 " + checkbox.value);
+		}
+	});
+}
+</script>
 {% endblock %}

@@ -1,6 +1,9 @@
 <header>
 <ul class="breadcrumb pull-right">
   {% if request.user.is_authenticated %}
+      {% if request.session.menus and request.session.menus.items|length > 0 %}
+      <li><a href="{% url order_ready %}" class="text-warning">有未完成订餐({{request.session.menus.items|length}})</a> <span class="divider">|</span></li>
+      {% endif %}
 	  <li><a href="#">{{request.user.username}}</a> <span class="divider">|</span></li>
 	  <li><a href="{% url logout %}">登出</a> <span class="divider">|</span></li>
 	  {% if request.user.is_superuser %}
