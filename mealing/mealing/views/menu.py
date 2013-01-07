@@ -22,7 +22,7 @@ True
 >>> resp_obj = simplejson.loads(resp.content)
 >>> print resp_obj["is_ok"]
 True
->>> print c.session["menus"].get(menu.id)
+>>> print menu.id in c.session["menus"]
 True
 """
 
@@ -50,14 +50,15 @@ def check(request, menu_id = 0):
     if menu == None:
         logging.debug("not found menu")
         return {"is_ok": False, "reason": u"无效菜单id"}
-    # menus store as {"menu_id": True|False}, True|False is checked.
-    menus = request.session.get("menus", {})
+    # menus store as set("menu_id", )
+    menus = request.session.get("menus", set())
+    if type(menus) is not types.TupleType:
+        logging.debug("menus instance is %s" % type(menus))
+        request.session["menus"] = set()
     if menu_id not in menus:
-        menus[menu_id] = True
+        menus.add(menu_id)
     else:
-        menus[menu_id] = (not menus[menu_id])
-    if menus[menu_id] == False:
-        menus.pop(menu_id)
+        menus.remove(menu_id)
     # reset session["menu"]
     request.session["menus"] = menus
-    return {"is_ok": True, "is_checked": menus[menu_id]}
+    return {"is_ok": True}

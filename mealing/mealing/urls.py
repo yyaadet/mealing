@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     url(r"^logout/$", "mealing.views.user.logout", name = "logout"),
     url(r"register/$", "mealing.views.user.register", name = "register"),
     url(r"change_password/$", "mealing.views.user.change_password", name = "change_password"),
+    url(r"get_usernames/(?P<username>\w+)/$", "mealing.views.user.get_usernames"),
+    url(r"get_usernames/$", "mealing.views.user.get_usernames"),
     
     url(r"^restaurant/all/(?P<page>\d+)/$", "mealing.views.restaurant.all", name = "restaurant_all"),
     url(r"^restaurant/all/$", "mealing.views.restaurant.all"),

@@ -4,3 +4,4 @@
 '''
 
 from user import LoginForm, RegisterForm, ChangePasswordForm
+from order import CommitOrderForm

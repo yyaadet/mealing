@@ -5,6 +5,7 @@
 # test login
 >>> from django.test.client import Client
 >>> from django.contrib.auth.models import User as DjangoUser
+>>> from django.utils import simplejson
 >>> c = Client()
 >>> resp = c.get("/login/")
 >>> print resp.status_code
@@ -16,7 +17,7 @@ True
 True
 >>> u = DjangoUser.objects.create_user("loginu", "u1@funshion.com", "1111")
 >>> resp = c.post("/login/", {"username": "loginu", "password": "1111"})
->>> print resp.status_code 
+>>> print resp.status_code
 302
 >>> c.login(username = "loginu", password = "1111")
 True
@@ -61,6 +62,15 @@ True
 >>> c.logout()
 >>> print c.login(username = "loginu", password = "3333")
 True
+
+# test get_usernames()
+>>> resp = c.get("/get_usernames/")
+>>> print simplejson.loads(resp.content)
+[]
+>>> resp = c.get("/get_usernames/t/")
+>>> retv = simplejson.loads(resp.content)
+>>> print len(retv) > 0
+True
 '''
 
 from django.views.decorators.csrf import csrf_protect
@@ -72,13 +82,14 @@ from django.contrib.auth import logout as djlogout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User as DjangoUser
 from django import forms
-from mealing.views.decorator import render_template
+from mealing.views.decorator import render_template, render_json
 from mealing.forms import LoginForm, RegisterForm, ChangePasswordForm
 from mealing.forms.base import DivErrorList
 import logging
 
 
 logger = logging.getLogger(__name__)
+
 
 @csrf_protect
 def login(request):
@@ -95,7 +106,7 @@ def login(request):
             password = form.cleaned_data["password"]
             is_remember = form.cleaned_data["is_remember"]
             user = authenticate(username = username, password = password)
-            if user == None:
+            if user is None:
                 form.set_custom_error(u"用户不存在或是密码错误")
                 logger.info("user's password is error: %s" % form.non_field_errors())
                 return render_template("login.html", {"form": form}, request)
@@ -108,11 +119,13 @@ def login(request):
         
     return render_template("login.html", {"form": form}, request)
 
+
 def logout(request):
     """ logout view
     """
     djlogout(request)
     return redirect("/")
+
 
 def register(request):
     """ user register view
@@ -168,3 +181,16 @@ def change_password(request):
     else:
         form= ChangePasswordForm()
     return render_template("change_password.html", {"form": form}, request)
+
+
+@render_json
+def get_usernames(request, username = ""):
+    """ get usernames list when case-insensitive contain username
+    """
+    if not username:
+        return []
+    users = DjangoUser.objects.filter(username__icontains=username)
+    usernames = []
+    for user in users[0:5]:
+        usernames.append(user.username)
+    return usernames

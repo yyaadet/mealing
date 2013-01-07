@@ -8,7 +8,12 @@
 
 <ul class="breadcrumb">
   <li><a href="{% url restaurant_all 1%}">全部餐厅</a> <span class="divider">/</span></li>
-  <li class="active">{{restaurant_name}}</li>
+  {% if restaurant %}
+  <li><a href="{% url restaurant_all_menu restaurant.id restaurant.name 1%}">{{restaurant.name}}</a> <span class="divider">/</span></li>
+  {% else %}
+  <li>未知订餐 <span class="divider">/</span></li>
+  {% endif %}
+  <li class="active">总费用：￥{{total_price}} </li>
 </ul>
 
 
@@ -34,11 +39,21 @@
 	{% endfor %}
 </table>
 
-{% pagination menus_page prefix %}
+{% pagination menus_page "/order/ready" %}
 
-<div class="row">
-    <div class="span2 offset6"><a href="{% url order_ready %}" class="btn btn-large btn-primary">提交订餐</a></div>
-</div>
+<form action="{% url order_ready%}" method="post" class="form-inline">
+	{% csrf_token %}
+    {{ form.custom_error }}
+    <div class="control-group">
+	    <label class="control-label">领餐人({{ form.receivers.help_text }})</label>
+	    <div class="controls">
+	      {{ form.receivers }} {{form.receivers.errors}}
+	    </div>
+  	</div>  
+  	<div class="control-group">
+  		<button type="submit" class="btn pull-right">确认</button> 
+  	</div>
+</form>
 
 <br />
 
@@ -55,9 +70,23 @@ function check_menu(checkbox, menu_id) {
 			$("#alert_box").html(data.reason);
 		} else {
 			$("#alert_box").attr("class", "alert alert-success");
-			$("#alert_box").html("成功点击 " + checkbox.value);
+			$("#alert_box").html("成功选择 " + checkbox.value);
 		}
 	});
 }
+
+
+
+$("#receivers_input").keypress(function () {
+	var value = $("#receivers_input").val()
+	var usernames = value.split(" ");
+	var username = usernames[usernames.length - 1];
+	$.getJSON("/get_usernames/" + username + "/", {}, function(data) {
+		$("#receivers_input").autocomplete({
+			source: data
+		});
+	});
+});
+
 </script>
 {% endblock %}
