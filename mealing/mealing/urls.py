@@ -18,10 +18,11 @@ urlpatterns = patterns('',
     url(r'^$', 'mealing.views.home.index', name='home'),
     url(r"^login/$", "mealing.views.user.login", name = "login"),
     url(r"^logout/$", "mealing.views.user.logout", name = "logout"),
-    url(r"register/$", "mealing.views.user.register", name = "register"),
-    url(r"change_password/$", "mealing.views.user.change_password", name = "change_password"),
-    url(r"get_usernames/(?P<username>\w+)/$", "mealing.views.user.get_usernames"),
-    url(r"get_usernames/$", "mealing.views.user.get_usernames"),
+    url(r"^register/$", "mealing.views.user.register", name = "register"),
+    url(r"^change_password/$", "mealing.views.user.change_password", name = "change_password"),
+    url(r"^get_usernames/(?P<username>\w+)/$", "mealing.views.user.get_usernames"),
+    url(r"^get_usernames/$", "mealing.views.user.get_usernames"),
+    url(r"^user/$", "mealing.views.user.home", name = "user_home"),
     
     url(r"^restaurant/all/(?P<page>\d+)/$", "mealing.views.restaurant.all", name = "restaurant_all"),
     url(r"^restaurant/all/$", "mealing.views.restaurant.all"),
@@ -32,6 +33,7 @@ urlpatterns = patterns('',
     url(r"^menu/check/(?P<menu_id>\d+)/$", "mealing.views.menu.check", name = "menu_check"),
     
     url(r"^order/ready/$", "mealing.views.order.ready", name = "order_ready"),
+    url(r"^order/(?P<order_id>\d+)/$", "mealing.views.order.info", name = "order_info"),
     # url(r'^mealing/', include('mealing.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
@@ -43,9 +45,6 @@ urlpatterns = patterns('',
     url(r'^reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm'),
     url(r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete'),
     url(r'^admin/', include(admin.site.urls), name = "admin"),
-    
-    
-    
 )
 
 

@@ -35,6 +35,8 @@ class Order(models.Model):
     [<User: u1>]
     >>> print o.get_owners_string()
     u1, 
+    >>> print o.is_end()
+    False
     """
     sponsor = models.ForeignKey(DjangoUser, blank = False, editable = False)
     restaurant = models.ForeignKey(Restaurant, blank = False, verbose_name = u"餐厅")
@@ -42,7 +44,7 @@ class Order(models.Model):
     menus = models.ManyToManyField(Menu, blank = False)
     price = models.IntegerField(default = 0, editable = False, verbose_name = u"总价格")
     add_timestamp = models.IntegerField(default = (lambda: int(time.time())), editable = False, verbose_name = u"下单时间")
-    end_timestamp = models.IntegerField(default = 0, editable = False, verbose_name = u"下单时间")
+    end_timestamp = models.IntegerField(default = 0, editable = False, verbose_name = u"结束订单时间")
     
     class Meta:
         app_label = "mealing"
@@ -80,3 +82,18 @@ class Order(models.Model):
             retv += u"%s, " % m.name
         return retv
     get_menus_string.short_description = u"所订菜单"
+    
+    def is_end(self):
+        """ is order end?
+        """
+        if self.end_timestamp == 0:
+            return False
+        if int(time.time()) > self.end_timestamp:
+            return True
+        return False
+    
+    def get_add_time(self):
+        """ readable add_timestamp
+        """
+        return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.add_timestamp))
+    add_timestamp.short_description = u"订餐时间"

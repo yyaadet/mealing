@@ -71,6 +71,14 @@ True
 >>> retv = simplejson.loads(resp.content)
 >>> print len(retv) > 0
 True
+
+# test home()
+>>> c.logout()
+>>> c.login(username = "loginu", password = "3333")
+True
+>>> resp = c.get("/user/")
+>>> print resp.status_code
+200
 '''
 
 from django.views.decorators.csrf import csrf_protect
@@ -194,3 +202,13 @@ def get_usernames(request, username = ""):
     for user in users[0:5]:
         usernames.append(user.username)
     return usernames
+
+def home(request):
+    """ user home page. permission is private. 
+    """
+    if request.user.is_authenticated() is False:
+        return redirect("/login/")
+    logging.debug("request.user type: %s" % type(request.user))
+    profile = request.user.get_profile()
+    logging.debug("profile: %s" % profile)
+    return render_template("user_home.html", {"profile": profile}, request)

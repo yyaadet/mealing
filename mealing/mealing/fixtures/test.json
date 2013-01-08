@@ -1,0 +1,19 @@
+[
+    {
+        "model": "mealing.Config",
+        "pk": 1,
+        "fields": {
+            "per_capita_fee": 30
+        }
+    },
+    {
+        "model": "mealing.Restaurant",
+        "pk": 1,
+        "fields": {
+            "name": "凯越",
+            "phone1": "82352212",
+            "tips": "enjoy"
+        }
+    },
+    
+]

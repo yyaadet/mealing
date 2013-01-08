@@ -33,6 +33,8 @@ class Restaurant(models.Model):
     address = models.CharField(blank = False, max_length = 300, verbose_name = u"联系地址")
     tips = models.TextField(blank = False, max_length = 1024, verbose_name = u"友情提示")
     add_timestamp  = models.IntegerField(default = (lambda: int(time.time())), editable = False)
+    order_number = models.IntegerField(default = 0, editable = False, verbose_name = u"被订次数")
+    
     
     class Meta:
         """ meta class
@@ -78,6 +80,7 @@ class Menu(models.Model):
     name = models.CharField(blank = False, max_length = 60, verbose_name = u"菜名")
     price = models.IntegerField(default = 0, verbose_name = u"价格")
     add_timestamp = models.IntegerField(default = (lambda: int(time.time())), editable = False)
+    order_number = models.IntegerField(default = 0, editable = False, verbose_name = u"被订次数")
     
     class Meta:
         """ meta class

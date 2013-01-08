@@ -11,12 +11,10 @@
   {% if restaurant %}
   <li><a href="{% url restaurant_all_menu restaurant.id restaurant.name 1%}">{{restaurant.name}}</a> <span class="divider">/</span></li>
   {% else %}
-  <li>未知订餐 <span class="divider">/</span></li>
+  <li>未选餐厅 <span class="divider">/</span></li>
   {% endif %}
   <li class="active">总费用：￥{{total_price}} </li>
 </ul>
-
-
 
 <table class="table table-striped">
 	<tr>

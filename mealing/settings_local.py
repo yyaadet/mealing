@@ -74,5 +74,5 @@ EMAIL_USE_TLS = False
 """app settings
 """
 APP_NAME = u"风行订餐"
-APP_DEVELOPER = u"开发者: pengxt <pengxt@funshion.com>"
+APP_DEVELOPER = u"pengxt <pengxt@funshion.com>"
     

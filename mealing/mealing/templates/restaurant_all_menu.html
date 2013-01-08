@@ -8,7 +8,8 @@
 
 <ul class="breadcrumb">
   <li><a href="{% url restaurant_all 1%}">全部餐厅</a> <span class="divider">/</span></li>
-  <li class="active">{{restaurant_name}}</li>
+  <li class="active">{{restaurant_name}} <span class="divider">/</span></li>
+  <li class="active"><a href="{% url order_ready %}" class="btn btn-primary">提交订餐</a></li>
 </ul>
 
 
@@ -35,12 +36,6 @@
 </table>
 
 {% pagination menus_page prefix %}
-
-<div class="row">
-    <div class="span2 offset6"><a href="{% url order_ready %}" class="btn btn-large btn-primary">提交订餐</a></div>
-</div>
-
-<br />
 
 <div class="alert fade" id="alert_box">
 	some error here

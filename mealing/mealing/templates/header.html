@@ -1,10 +1,11 @@
+{% load static %}
 <header>
 <ul class="breadcrumb pull-right">
   {% if request.user.is_authenticated %}
       {% if request.session.menus and request.session.menus|length > 0 %}
       <li><a href="{% url order_ready %}" class="text-warning">有未完成订餐({{request.session.menus|length}})</a> <span class="divider">|</span></li>
       {% endif %}
-	  <li><a href="#">{{request.user.username}}</a> <span class="divider">|</span></li>
+	  <li><a href="{% url user_home %}">{{request.user.username}}</a> <span class="divider">|</span></li>
 	  <li><a href="{% url logout %}">登出</a> <span class="divider">|</span></li>
 	  {% if request.user.is_superuser %}
 	  <li><a href="/admin/">管理入口</a></li>
@@ -17,5 +18,5 @@
   {% endif %}
 </ul>
 
-<h1><a href="{% url home%}">{{ settings.APP_NAME }}</a></h1>
+<h1><a href="{% url home%}"><img src="{% static 'img/logo.gif'%}" /></a></h1>
 </header>

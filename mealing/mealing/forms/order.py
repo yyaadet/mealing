@@ -18,10 +18,12 @@ def validate_receivers(value):
     # check user
     receiver_names = value.split(" ")
     for name in receiver_names:
-        u = DjangoUser.objects.filter(username=name)
-        if not u:
+        users = DjangoUser.objects.filter(username=name)
+        if not users:
            raise ValidationError(u"%s 不是一个有效的用户名" % name)
-       
+        user = users[0]
+        if user.get_profile().has_ordered_today():
+            raise ValidationError(u"%s 今日已经订餐" % name)
        
 class CommitOrderForm(base.BasisForm):
     """ user commit order form.
