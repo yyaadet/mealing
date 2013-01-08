@@ -10,6 +10,7 @@ __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 import os
 import logging
 
+from settings import *
 
 STATUS = "dev"  # test, dev, pro
 
