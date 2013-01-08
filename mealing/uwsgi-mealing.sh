@@ -13,7 +13,7 @@ PID=/var/run/uwsgi-mealing.pid
 command=/usr/bin/uwsgi
 PORT=3051
 LOGFILE=/home/web_log/uwsgi-mealing.log
-HOME=/home/webapp/mealing
+HOME=/home/webapps/mealing/mealing
 
 wait_for_pid () {
     try=0
@@ -48,7 +48,7 @@ case "$1" in
     start)
         echo -n "Starting $name " 
         ulimit -n 10000
-        $command --pythonpath $HOME -w wsgi -M -p 4 --socket :$PORT -d $LOGFILE --pidfile $PID --max-request 1024 --limit-post 1048576 --logdate --uid nginx --gid nginx --disable-logging
+        $command -w ${HOME}/app_uwsgi -M -p 4 --socket :$PORT -d $LOGFILE --pidfile $PID --max-request 1024 --limit-post 1048576 --logdate --uid nginx --gid nginx --disable-logging
 
         if [ "$?" != 0 ] ; then
             echo " failed" 
