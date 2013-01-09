@@ -4,7 +4,8 @@
 '''
 
 from django import forms
-import base
+from mealing.models import Department
+from mealing.forms import base
 
 
 class LoginForm(base.BasisForm):
@@ -29,10 +30,15 @@ class LoginForm(base.BasisForm):
     
 class RegisterForm(base.BasisForm):
     """user register form
+    >>> form = RegisterForm()
+    >>> print form.is_valid()
+    False
     """
     username = forms.CharField(max_length = 30)
     password = forms.CharField(max_length = 30, widget = forms.PasswordInput)
     email = forms.EmailField(max_length = 60)
+    real_name = forms.CharField(max_length = 30)
+    department = forms.ModelChoiceField(queryset = Department.objects.all(), empty_label = u"请选择部门")
     
 class ChangePasswordForm(base.BasisForm):
     """ user change password form

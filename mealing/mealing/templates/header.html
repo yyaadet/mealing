@@ -1,5 +1,22 @@
 {% load static %}
 <header>
+{% if messages %}
+{% for message in messages %}
+{% if message.tag == "success" %}
+<div class="alert alert-success">
+{% elif message.tag == "warning" %}
+<div class="alert alert-warning">
+{% elif message.tag == "error" %}
+<div class="alert alert-error">
+{% else %}
+<div class="alert">
+{% endif %}
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
 <ul class="breadcrumb pull-right">
   {% if request.user.is_authenticated %}
       {% if request.session.menus and request.session.menus|length > 0 %}

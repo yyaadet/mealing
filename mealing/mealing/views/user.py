@@ -2,10 +2,12 @@
 # coding=utf-8
 ''' user view functions.
 
-# test login
+>>> from mealing.models import Department
 >>> from django.test.client import Client
 >>> from django.contrib.auth.models import User as DjangoUser
 >>> from django.utils import simplejson
+
+# test login()
 >>> c = Client()
 >>> resp = c.get("/login/")
 >>> print resp.status_code
@@ -25,7 +27,7 @@ True
 >>> print resp.status_code
 302
 
-# test logout
+# test logout()
 >>> resp = c.get("/logout/")
 >>> print resp.status_code
 302
@@ -35,11 +37,17 @@ True
 >>> resp = c.get("/register/")
 >>> print resp.status_code
 200
->>> resp = c.post("/register/", {"username": "t11111", "password": "1111", "email": "pengxt@funshion.com"})
+>>> department = Department.objects.create(name = "r&d")
+>>> resp = c.post("/register/", {"username": "t11111", "password": "1111", "email": "pengxt@funshion.com", "real_name": "xiaotao", "department": department.id})
 >>> print resp.status_code
 302
+>>> user = DjangoUser.objects.filter(username = "t11111")[0]
+>>> print user.get_profile().department.name 
+r&d
+>>> print user.get_profile().real_name 
+xiaotao
 >>> c.logout()
->>> resp = c.post("/register/", {"username": "t11111", "password": "1111", "email": "pengxt@funshion.com"})
+>>> resp = c.post("/register/", {"username": "t11111", "password": "1111", "email": "pengxt@funshion.com", "real_name": "xiaotao", "department": department.id})
 >>> print resp.status_code
 200
 >>> print resp.context["form"].custom_error != ""
@@ -146,14 +154,20 @@ def register(request):
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
             email = form.cleaned_data["email"]
+            real_name = form.cleaned_data["real_name"]
+            department = form.cleaned_data["department"]
             if DjangoUser.objects.filter(username = username).count() > 0:
                 form.set_custom_error(u"用户名或已被他人注册")
                 return render_template("register.html", {"form": form}, request)
             try:
                 user = DjangoUser.objects.create_user(username, email, password)
+                profile = user.get_profile()
+                profile.real_name = real_name
+                profile.department = department
+                profile.save()
             except Exception, e:
                 logging.warn("failed to register: %s" % e)
-                form.set_custom_error(u"系统发生故障")
+                form.set_custom_error(u"系统发生故障: %s" % e)
                 return render_template("register.html", {"form": form}, request)
             user = authenticate(username = username, password = password)
             djangologin(request, user)

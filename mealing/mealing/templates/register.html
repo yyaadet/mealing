@@ -24,6 +24,18 @@
 	    </div>
     </div>
     <div class="control-group">
+	    <label class="control-label">真实姓名</label>
+	    <div class="controls">
+	      {{ form.real_name }} {{ form.real_name.errors }}
+	    </div>
+    </div>
+    <div class="control-group">
+	    <label class="control-label">所属部门</label>
+	    <div class="controls">
+	      {{ form.department }} {{ form.department.errors }}
+	    </div>
+    </div>
+    <div class="control-group">
 	    <div class="controls">
 	      <button type="submit" class="btn">注册</button>
 	    </div>

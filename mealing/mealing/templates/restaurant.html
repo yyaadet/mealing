@@ -15,9 +15,9 @@
       <img data-src="{% static 'js/holder.js/260x180/text:完善中...' %}" alt="">
       <h3>{{rest.name}}</h3>
       <p>
-      	{% if rest.tips %}
-      	{{rest.tips}} <br />
-      	{% endif %}
+      	{% if rest.tips %} {{ rest.tips }} <br />{% endif %}
+      	每日最大订餐人：{{ rest.max_person_everyday }} <br />
+      	订餐次数：{{ rest.order_number }} <br />
       	地址：{{rest.address}} <br />
       	电话1：{{rest.phone1}} <br />
       	{% if rest.phone2 %}

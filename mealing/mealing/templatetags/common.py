@@ -51,7 +51,6 @@ class NavNode(template.Node):
             if tab["name"] == self._cur_tab:
                 tab["is_active"] = 1
             tabs.append(tab)
-        logging.debug("tabs: %s\ncurrent tab: %s" % (tabs, self._cur_tab))
         new_context = Context({'tabs': tabs}, autoescape=context.autoescape)
         return t.render(new_context)
     

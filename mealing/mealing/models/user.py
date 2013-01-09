@@ -9,7 +9,7 @@ __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 from django.contrib.auth.models import User as DjangoUser
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
 from django.db import models
-from mealing.models import Order
+from mealing.models import Order, Department
 import time
 import datetime
 
@@ -37,6 +37,7 @@ class UserProfile(models.Model):
     last_order_timestamp = models.IntegerField(default = 0, editable = False)
     last_order = models.ForeignKey("Order", null = True)
     real_name = models.CharField(max_length = 30, verbose_name = u"真实姓名")
+    department = models.ForeignKey("Department", null = True, verbose_name = u"所属部门")
     
     class Meta:
         app_label = "mealing"

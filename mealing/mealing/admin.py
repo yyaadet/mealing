@@ -16,6 +16,7 @@ from mealing.models import Restaurant, Menu, MenuPrice
 from mealing.models import UserProfile
 from mealing.models import Order
 from mealing.models import Config
+from mealing.models import Department
 import time
 
 
@@ -42,13 +43,16 @@ class ConfigAdmin(admin.ModelAdmin):
     
     
 class MenuPriceAdmin(admin.ModelAdmin):
-    list_display = ("get_menu_name", "price", "readable_add_timestamp")
+    list_display = ("get_menu_name", "price", "readable_add_timestamp", )
     
     def has_delete_permission(self, request, obj=None):
         return False
     
     def has_add_permission(self, request):
         return False
+    
+class DepartmentAdmin(admin.ModelAdmin):
+    list_display = ("name", )
 
 # Define an inline admin descriptor for UserProfile model
 # which acts a bit like a singleton
@@ -65,6 +69,7 @@ class UserAdmin(DjangoUserAdmin):
 admin.site.register(Restaurant, RestaurantAdmin)
 admin.site.register(Menu, MenuAdmin)
 admin.site.register(MenuPrice, MenuPriceAdmin)
+admin.site.register(Department, DepartmentAdmin)
 # Re-register UserAdmin
 admin.site.unregister(DjangoUser)
 admin.site.register(DjangoUser, UserAdmin)

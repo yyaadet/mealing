@@ -36,6 +36,7 @@ LIST_OF_DOCTESTS = [
 ]
 
 LIST_OF_UNITTESTS = [
+    "mealing.tests.order",
 ]
 
 def suite():

@@ -1,30 +1,36 @@
 #!/bin/env python
 # coding=utf-8
 '''restaurant model definition.
+>>> from mealing.models.restaurant import Restaurant
 
+#create some restaurants
+>>> r1 = Restaurant(name = u"test1", phone1 = u"12222", address = u"good", tips = u"test")
+>>> r1.save()
+>>> print r1
+test1
+>>> r1.add_timestamp = 0
+>>> print r1.readable_add_timestamp()
+1970-01-01 08:00:00
+>>> print r1.get_menu_num()
+0
+>>> r1.add_order_number(10)
+>>> r1.save()
+>>> print r1.order_number
+10
 '''
 
 __author__ = 'pengxt <164504252@qq.com>'
 __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 
 from django.db import models
+from mealing.utils import is_today
 import time
+import datetime
 
 
 class Restaurant(models.Model):
     """ A Restaurant object
-    >>> from mealing.models.restaurant import Restaurant
-    
-    #create some restaurants
-    >>> r1 = Restaurant(name = u"test1", phone1 = u"12222", address = u"good", tips = u"test")
-    >>> r1.save()
-    >>> print r1
-    test1
-    >>> r1.add_timestamp = 0
-    >>> print r1.readable_add_timestamp()
-    1970-01-01 08:00:00
-    >>> print r1.get_menu_num()
-    0
+
     """
     name = models.CharField(blank = False, max_length = 60, verbose_name = u"名称")
     phone1 = models.CharField(blank = False, max_length = 60, verbose_name = u"电话1")
@@ -34,6 +40,9 @@ class Restaurant(models.Model):
     tips = models.TextField(blank = False, max_length = 1024, verbose_name = u"友情提示")
     add_timestamp  = models.IntegerField(default = (lambda: int(time.time())), editable = False)
     order_number = models.IntegerField(default = 0, editable = False, verbose_name = u"被订次数")
+    max_person_everyday = models.IntegerField(default = 0, verbose_name = u"最多可订餐人数")
+    last_order_timestamp = models.IntegerField(default = 0, editable = False)
+    order_number_today= models.IntegerField(default = 0, editable = False, verbose_name = u"今日订餐人数")
     
     
     class Meta:
@@ -57,6 +66,19 @@ class Restaurant(models.Model):
         """
         return Menu.objects.filter(restaurant = self.id).count()
     get_menu_num.short_description = u"菜单数"
+    
+    def add_order_number(self, number = 1):
+        """ add order number
+        """
+        last_order_date = datetime.datetime(1, 1, 1).fromtimestamp(self.last_order_timestamp)
+        if is_today(last_order_date):
+            self.order_number += number
+            self.order_number_today += number
+            self.last_order_timestamp = int(time.time())
+        else:
+            self.order_number += number
+            self.order_number_today = number
+            self.last_order_timestamp = int(time.time())
     
 class Menu(models.Model):
     """ menu of restaurant
