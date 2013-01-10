@@ -109,12 +109,12 @@ def _is_restaurant_full(request, restaurant, receiver_number):
         if receiver_number + restaurant.order_number_today > restaurant.max_person_everyday:
             messages.warning(request, u"剩余可订餐人数为 %d，请更换其他餐厅。" % 
                              (restaurant.max_person_everyday - restaurant.order_number_today))
-            return False
+            return True
     else:
         if restaurant.max_person_everyday <= restaurant.order_number_today:
             messages.warning(request, u"本餐厅最大订餐人数为 %d" % restaurant.max_person_everyday)
-            return False
-    return True
+            return True
+    return False
 
 def ready(request, page = 1):
     """ ready to complete order

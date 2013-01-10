@@ -25,7 +25,7 @@ DATABASES = {
     }
 }
 
-CACHE_BACKEND = 'memcached://192.168.16.205:11211/?max_entries=2048&timeout=5&cull_percentage=10'
+CACHE_BACKEND = 'memcached://192.168.16.205:11212/?max_entries=2048&timeout=5&cull_percentage=10'
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 #for logging

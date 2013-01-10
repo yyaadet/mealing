@@ -35,7 +35,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(DjangoUser)
     order_number = models.IntegerField(default = 0, editable = False, verbose_name = u"订餐次数")
     last_order_timestamp = models.IntegerField(default = 0, editable = False)
-    last_order = models.ForeignKey("Order", null = True)
+    last_order = models.ForeignKey("Order", null = True, editable = False)
     real_name = models.CharField(max_length = 30, verbose_name = u"真实姓名")
     department = models.ForeignKey("Department", null = True, verbose_name = u"所属部门")
     
