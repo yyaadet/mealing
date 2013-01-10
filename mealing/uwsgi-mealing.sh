@@ -47,7 +47,6 @@ wait_for_pid () {
 case "$1" in
     start)
         echo -n "Starting $name " 
-        ulimit -n 10000
         $command -w ${HOME}/app_uwsgi -M -p 4 --socket :$PORT -d $LOGFILE --pidfile $PID --max-request 1024 --limit-post 1048576 --logdate --uid nginx --gid nginx --disable-logging
 
         if [ "$?" != 0 ] ; then
