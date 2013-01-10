@@ -34,7 +34,7 @@ class Order(models.Model):
     >>> print o.owners.all()
     [<User: u1>]
     >>> print o.get_owners_string()
-    u1, 
+    u1(), 
     >>> print o.is_end()
     False
     """
