@@ -4,6 +4,7 @@
 '''
 
 from django import forms
+from django.core.validators import validate_slug
 from mealing.models import Department
 from mealing.forms import base
 
@@ -34,7 +35,7 @@ class RegisterForm(base.BasisForm):
     >>> print form.is_valid()
     False
     """
-    username = forms.CharField(max_length = 30)
+    username = forms.CharField(max_length = 30, validators = [validate_slug])
     password = forms.CharField(max_length = 30, widget = forms.PasswordInput)
     email = forms.EmailField(max_length = 60)
     real_name = forms.CharField(max_length = 30)
