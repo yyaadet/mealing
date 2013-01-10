@@ -11,16 +11,16 @@ from settings import *
 import os
 import logging
 
-STATUS = "dev"  # test, dev, pro
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'mealing',  # Or path to database file if using sqlite3.
+        'NAME': 'mealing_pro',  # Or path to database file if using sqlite3.
         'USER': 'cacti',  # Not used with sqlite3.
         'PASSWORD': 'cacti',  # Not used with sqlite3.
-        'HOST': 'localhost',  # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': '192.168.16.205',  # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',  # Set to empty string for default. Not used with sqlite3.
+        'TEST_CHARSET': "utf8",
     }
 }
 
@@ -29,39 +29,12 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 #for logging
 LOG_FILENAME = "mealing.debug.log"
-LEVEL = logging.DEBUG
+LEVEL = logging.WARNING
 logging.basicConfig(
     filename=os.path.join(os.path.dirname(__file__), LOG_FILENAME),
     level = LEVEL,
     format='%(pathname)s TIME: %(asctime)s MSG: %(filename)s:%(funcName)s:%(lineno)d %(message)s',
 )
-
-
-if STATUS == "dev" :
-    DATABASES = {
-       'default': {
-            'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': 'mealing',  # Or path to database file if using sqlite3.
-            'USER': 'cacti',  # Not used with sqlite3.
-            'PASSWORD': 'cacti',  # Not used with sqlite3.
-            'HOST': '192.168.16.205',  # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '',  # Set to empty string for default. Not used with sqlite3.
-            'TEST_CHARSET': "utf8",
-        }
-    }
-elif STATUS == "test":
-    DATABASES = {
-       'default': {
-            'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': 'mealing',  # Or path to database file if using sqlite3.
-            'USER': 'cacti',  # Not used with sqlite3.
-            'PASSWORD': 'cacti',  # Not used with sqlite3.
-            'HOST': 'localhost',  # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '',  # Set to empty string for default. Not used with sqlite3.
-            'TEST_CHARSET': "utf8",
-        }
-    }
-    CACHE_BACKEND = 'memcached://localhost:11211/?max_entries=2048&timeout=5&cull_percentage=10'
     
     
 EMAIL_HOST = "mail.funshion.com"
