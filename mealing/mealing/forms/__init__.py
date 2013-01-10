@@ -3,5 +3,5 @@
 ''' all forms.
 '''
 
-from user import LoginForm, RegisterForm, ChangePasswordForm
+from user import LoginForm, RegisterForm, ChangePasswordForm, ChangeInfoForm
 from order import CommitOrderForm

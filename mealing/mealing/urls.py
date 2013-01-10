@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r"^change_password/$", "mealing.views.user.change_password", name = "change_password"),
     url(r"^get_usernames/(?P<username>\w+)/$", "mealing.views.user.get_usernames"),
     url(r"^get_usernames/$", "mealing.views.user.get_usernames"),
+    url(r"^change_info/$", "mealing.views.user.change_info", name = "change_info"),
     url(r"^user/$", "mealing.views.user.home", name = "user_home"),
     
     url(r"^restaurant/all/(?P<page>\d+)/$", "mealing.views.restaurant.all", name = "restaurant_all"),
@@ -34,6 +35,8 @@ urlpatterns = patterns('',
     
     url(r"^order/ready/$", "mealing.views.order.ready", name = "order_ready"),
     url(r"^order/(?P<order_id>\d+)/$", "mealing.views.order.info", name = "order_info"),
+    url(r"^order/today/$", "mealing.views.order.today"),
+    url(r"^order/today/(?P<page>\d+)/$", "mealing.views.order.today", name = "order_today"),
     # url(r'^mealing/', include('mealing.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

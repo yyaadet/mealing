@@ -3,8 +3,12 @@
 {% block content %}
 <h3>{{request.user.username}} 的主页</h3>
 <div class="row">
+	
+</div>
+<div class="row">
 	<div class="span2">真实姓名</div>
-	<div class="span10">{{profile.real_name}}</div>
+	<div class="span8">{{profile.real_name}}</div>
+	<div class="span2"><a href="{% url change_info %}">个人信息设置</a></div>
 </div>
 <div class="row">
 	<div class="span2">所属部门</div>

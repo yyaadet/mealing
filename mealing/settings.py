@@ -20,6 +20,7 @@ from settings_local import *
 # In a Windows environment this must be set to your system time zone.
 TIME_ZONE = 'Asia/Shanghai'
 TIME_FORMAT = "H:m:s"
+DATE_FORMAT = "Y-m-d"
 DATETIME_FORMAT = "Y-m-d H:m:s"
 
 # Language code for this installation. All choices can be found here:

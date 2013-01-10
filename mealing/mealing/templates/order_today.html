@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% load common %}
+
+{% block tabs %} {% nav "今日订餐" %} {% endblock %}
+
+{% block content %}
+
+<ul class="breadcrumb">
+  <li><a href="{% url restaurant_all 1%}">全部餐厅</a> <span class="divider">/</span></li>
+  <li>{{ today|date }} <span class="divider">/</span></li>
+  <li class="active">总价格：￥{{ total_price }}</li>
+</ul>
+
+<table class="table table-striped">
+	<tr>
+		<th>订餐号</th>
+		<th>餐厅</th>
+		<th>所属部门</th>
+		<th>订餐人</th>
+		<th>领餐人</th>
+		<th>菜品</th>
+		<th>金额</th>
+		<th>订餐时间</th>
+		<th>到餐时间</th>
+	</tr>
+	{% for order in orders_page.object_list %}
+	<tr>
+		<td>{{ order.id }}</td>
+		<td>{{ order.restaurant }}</td>
+		<td>{{ order.sponsor.get_profile.department }}</td>
+		<td>{{ order.sponsor}}({{ order.sponsor.get_profile.real_name }})</td>
+		<td>{{ order.get_owners_string }}</td>
+		<td>{{ order.get_menus_string }}</td>
+		<td>￥{{ order.price }}</td>
+		<td>{{ order.get_add_time }}</td>
+		<td>{{ order.get_end_time }}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+{% pagination orders_page "/order/today" %}
+{% endblock %}

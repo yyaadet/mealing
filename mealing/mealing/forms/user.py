@@ -46,3 +46,12 @@ class ChangePasswordForm(base.BasisForm):
     old_password = forms.CharField(max_length = 30, widget = forms.PasswordInput)
     new_password = forms.CharField(max_length = 30, widget = forms.PasswordInput)
     new_password1 = forms.CharField(max_length = 30, widget = forms.PasswordInput)
+    
+class ChangeInfoForm(base.BasisForm):
+    """ user change info form
+    >>> form = ChangeInfoForm()
+    >>> print form.is_valid()
+    False
+    """
+    real_name = forms.CharField(max_length = 30)
+    department = forms.ModelChoiceField(queryset = Department.objects.all(), empty_label = u"请选择部门")

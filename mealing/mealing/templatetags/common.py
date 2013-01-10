@@ -38,8 +38,8 @@ class NavNode(template.Node):
         self._cur_tab = cur_tab
         self._tabs = [{"name": u"主页", "url": "/"},
                            {"name": u"餐厅", "url": "/restaurant/all/"},
+                           {"name": u"今日订餐", "url": "/order/today/"},
                            {"name": u"排行榜", "url": "#"},
-                           {"name": u"今日订餐", "url": "#"},
                       ]
         
     def render(self, context):

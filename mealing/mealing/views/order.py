@@ -43,6 +43,11 @@ set([])
 >>> resp = c.get("/order/%d/" % u.get_profile().last_order.id)
 >>> print resp.status_code
 200
+
+######## test today() 
+>>> resp = c.get("/order/today/")
+>>> print resp.status_code
+200
 """
 
 
@@ -62,6 +67,7 @@ from mealing.forms import CommitOrderForm
 import logging
 import types
 import datetime
+import time
 
 
 
@@ -191,3 +197,25 @@ def info(request, order_id = 0):
     if not order:
         raise Http404
     return render_template("order_info.html", {"order": order}, request)
+
+def today(request, page = 1):
+    """ get today's order
+    """
+    today = datetime.datetime(1, 1, 1).today().replace(hour = 0, minute = 0, second = 0)
+    today_timestamp = time.mktime(today.timetuple())
+    orders = Order.objects.filter(add_timestamp__gt = today_timestamp)
+    total_price = 0
+    for order in orders:
+        total_price += order.price
+    paginator = Paginator(orders, 50)
+    try:
+        orders_page = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        orders_page = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        orders_page = paginator.page(paginator.num_pages)
+    return render_template("order_today.html", 
+                           {"orders_page": orders_page, "today": today, "total_price": total_price}, 
+                           request)

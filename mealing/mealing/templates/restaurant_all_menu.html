@@ -17,12 +17,14 @@
 <table class="table table-striped">
 	<tr>
 		<th>菜单名</th>
+		<th>被订次数</th>
 		<th>价格</th>
 		<th>选择</th>
 	</tr>
 	{% for menu in menus_page.object_list %}
 	<tr>
-		<td>{{menu.name}}</td>
+		<td>{{ menu.name }}</td>
+		<td>{{ menu.order_number }}</td>
 		<td>￥{{menu.price}}</td>
 		<td><label class="checkbox">
 			{% if menu.id in request.session.menus %}

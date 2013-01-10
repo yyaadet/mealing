@@ -38,10 +38,10 @@ class Order(models.Model):
     >>> print o.is_end()
     False
     """
-    sponsor = models.ForeignKey(DjangoUser, blank = False, editable = False)
+    sponsor = models.ForeignKey(DjangoUser, blank = False, editable = False, verbose_name = u"订餐人")
     restaurant = models.ForeignKey(Restaurant, blank = False, verbose_name = u"餐厅")
-    owners = models.ManyToManyField(DjangoUser, blank = False, related_name="%(app_label)s_%(class)s_owners")
-    menus = models.ManyToManyField(Menu, blank = False)
+    owners = models.ManyToManyField(DjangoUser, blank = False, related_name="%(app_label)s_%(class)s_owners", verbose_name = u"领餐人")
+    menus = models.ManyToManyField(Menu, blank = False, verbose_name = u"菜品")
     price = models.IntegerField(default = 0, editable = False, verbose_name = u"总价格")
     add_timestamp = models.IntegerField(default = (lambda: int(time.time())), editable = False, verbose_name = u"下单时间")
     end_timestamp = models.IntegerField(default = 0, editable = False, verbose_name = u"结束订单时间")
@@ -70,9 +70,9 @@ class Order(models.Model):
         """
         retval = u""
         for u in self.owners.all():
-            retval += "%s, " % u.username 
+            retval += "%s(%s), " % (u.username, u.get_profile().real_name) 
         return retval
-    get_owners_string.short_description = u"订餐人"
+    get_owners_string.short_description = u"领餐人"
     
     def get_menus_string(self):
         """get all menus string
@@ -96,4 +96,12 @@ class Order(models.Model):
         """ readable add_timestamp
         """
         return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.add_timestamp))
-    add_timestamp.short_description = u"订餐时间"
+    get_add_time.short_description = u"订餐时间"
+    
+    def get_end_time(self):
+        """ readable end_timestamp
+        """
+        if self.end_timestamp == 0:
+            return u"none"
+        return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.end_timestamp))
+    get_end_time.short_description = u"到餐时间"

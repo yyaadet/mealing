@@ -30,7 +30,7 @@ class MenuAdmin(admin.ModelAdmin):
     search_fields = ["name", ]
     
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("sponsor", "restaurant", "get_menus_string", "get_owners_string")
+    list_display = ("sponsor", "restaurant", "get_menus_string", "get_owners_string", "get_add_time", "get_end_time", )
     search_fields = ["sponsor", ]
     
     def has_add_permission(self, request):

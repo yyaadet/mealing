@@ -80,13 +80,25 @@ True
 >>> print len(retv) > 0
 True
 
-# test home()
+############### test home()
 >>> c.logout()
 >>> c.login(username = "loginu", password = "3333")
 True
 >>> resp = c.get("/user/")
 >>> print resp.status_code
 200
+
+############## test change_info()
+>>> c.logout()
+>>> c.login(username = "loginu", password = "3333")
+True
+>>> department = Department.objects.create(name = "department1")
+>>> resp = c.post("/change_info/", {"department": department.id, "real_name": "my real name"})
+>>> print resp.status_code
+302
+>>> user = DjangoUser.objects.filter(username = "loginu")[0]
+>>> print user.get_profile().real_name
+my real name
 '''
 
 from django.views.decorators.csrf import csrf_protect
@@ -99,7 +111,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User as DjangoUser
 from django import forms
 from mealing.views.decorator import render_template, render_json
-from mealing.forms import LoginForm, RegisterForm, ChangePasswordForm
+from mealing.forms import LoginForm, RegisterForm, ChangePasswordForm, ChangeInfoForm
 from mealing.forms.base import DivErrorList
 import logging
 
@@ -226,3 +238,20 @@ def home(request):
     profile = request.user.get_profile()
     logging.debug("profile: %s" % profile)
     return render_template("user_home.html", {"profile": profile}, request)
+
+def change_info(request):
+    """ change personal information
+    """
+    if request.user.is_authenticated() is False:
+        return redirect("/login/")
+    if request.method == "POST":
+        form = ChangeInfoForm(request.POST)
+        if form.is_valid():
+            profile = request.user.get_profile()
+            profile.real_name = form.cleaned_data["real_name"]
+            profile.department = form.cleaned_data["department"]
+            profile.save()
+            return redirect("/user/")
+    else:
+        form = ChangeInfoForm()
+    return render_template("change_info.html", {"form": form}, request)
