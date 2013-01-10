@@ -34,7 +34,7 @@ class Order(models.Model):
     >>> print o.owners.all()
     [<User: u1>]
     >>> print o.get_owners_string()
-    u1(), 
+    , 
     >>> print o.is_end()
     False
     """
@@ -70,7 +70,7 @@ class Order(models.Model):
         """
         retval = u""
         for u in self.owners.all():
-            retval += "%s(%s), " % (u.username, u.get_profile().real_name) 
+            retval += "%s, " % (u.get_profile().real_name) 
         return retval
     get_owners_string.short_description = u"领餐人"
     

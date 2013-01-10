@@ -16,7 +16,9 @@
       <h3>{{rest.name}}</h3>
       <p>
       	{% if rest.tips %} {{ rest.tips }} <br />{% endif %}
+      	{% if rest.max_person_everyday > 0 %}
       	每日最大订餐人：{{ rest.max_person_everyday }} <br />
+      	{% endif %}
       	订餐次数：{{ rest.order_number }} <br />
       	地址：{{rest.address}} <br />
       	电话1：{{rest.phone1}} <br />
