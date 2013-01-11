@@ -19,39 +19,39 @@
 		  </li>
 		</ul>
 	</div>
-	<div class="span6">
+	<div class="span9">
 		<h3>{{rest.name}}</h3>
-		<ul>
-			{% if rest.tips %}<li>{{ rest.tips }}</li>{% endif %}
-			{% if rest.max_person_everyday > 0 %}
-	      	<li>
-	      	每日最大订餐人：{{ rest.max_person_everyday }}
-	      	</li>
-	      	{% endif %}
-	      	<li>订餐次数：{{ rest.order_number }}</li>
-	      	{% if rest.max_person_everyday > 0 %}
-	      	<li>
-	      	每日最大订餐人：{{ rest.max_person_everyday }}
-	      	</li>
-	      	{% endif %}	
-	      	<li>
-      		电话：{{rest.phone1}}, 
-      		{% if rest.phone2 %}{{rest.phone2}}, {% endif %}
-      		{% if rest.phone3 %}{{rest.phone3}}{% endif %}
-      		</li>
-      		<li>{{rest.address}}</li>
-		</ul>
-		<a href="{% url restaurant_all_menu rest.id rest.name 1 %}" class="btn btn-mini">查看菜单</a>
-	</div>
-	<div class="span3">
-		<ul class="thumbnails">
-		  <li class="span3">
-		    <div class="thumbnail">
-		      <img data-src="{% static 'js/holder.js/260x180/text:地图完善中...' %}" alt="">
-		      
-		    </div>
-		  </li>
-		</ul>
+		<div class="row">
+			<div class="span4">
+				<ul>
+					{% if rest.tips %}<li class="text-warning">{{ rest.tips }}</li>{% endif %}
+					{% if rest.max_person_everyday > 0 %}
+			      	<li>
+			      	每日最大订餐人：{{ rest.max_person_everyday }}
+			      	</li>
+			      	{% endif %}
+			      	<li>订餐次数：{{ rest.order_number }}</li>
+			      	{% if rest.max_person_everyday > 0 %}
+			      	<li>
+			      	每日最大订餐人：{{ rest.max_person_everyday }}
+			      	</li>
+			      	{% endif %}	
+			      	<li>{{rest.address}}</li>
+				</ul>
+				<a href="{% url restaurant_all_menu rest.id rest.name 1 %}" class="btn btn-mini">查看菜单</a>
+			</div>
+			<div class="span5">
+				<ul>
+				  <li>
+		      		电话：{{rest.phone1}}, 
+		      		{% if rest.phone2 %}{{rest.phone2}}, {% endif %}
+		      		{% if rest.phone3 %}{{rest.phone3}}{% endif %}
+		      	  </li>
+		      	  <li>加入时间： {{ rest.readable_add_timestamp }}</li>
+				</ul>
+			</div>	
+		</div>
+		
 	</div>
 </div>
 {% endfor %}
