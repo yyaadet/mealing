@@ -122,6 +122,8 @@ def _is_order_shutdown(request, config):
 def _is_restaurant_full(request, restaurant, receiver_number):
     """ restaurant only fullfil some people, not all.
     """
+    if restaurant is None:
+        return True
     if restaurant.max_person_everyday == 0:
         return False
     now = datetime.datetime(1, 1, 1).today()
