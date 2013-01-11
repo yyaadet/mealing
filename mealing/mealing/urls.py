@@ -37,6 +37,7 @@ urlpatterns = patterns('',
     url(r"^order/(?P<order_id>\d+)/$", "mealing.views.order.info", name = "order_info"),
     url(r"^order/today/$", "mealing.views.order.today"),
     url(r"^order/today/(?P<page>\d+)/$", "mealing.views.order.today", name = "order_today"),
+    url(r"^order/del/(?P<order_id>\d+)/$", "mealing.views.order.delete", name = "del_order"),
     # url(r'^mealing/', include('mealing.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

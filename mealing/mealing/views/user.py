@@ -253,5 +253,7 @@ def change_info(request):
             profile.save()
             return redirect("/user/")
     else:
-        form = ChangeInfoForm()
+        profile = request.user.get_profile()
+        data = {"real_name": profile.real_name, "department": profile.department}
+        form = ChangeInfoForm(data)
     return render_template("change_info.html", {"form": form}, request)

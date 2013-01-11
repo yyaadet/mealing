@@ -37,6 +37,14 @@ class Order(models.Model):
     , 
     >>> print o.is_end()
     False
+    
+    ######### test delete()
+    >>> o.delete()
+    >>> user = DjangoUser.objects.get(pk = u.id)
+    >>> print user.get_profile().last_order
+    None
+    >>> print user.get_profile().last_order_timestamp
+    0
     """
     sponsor = models.ForeignKey(DjangoUser, blank = False, editable = False, verbose_name = u"订餐人")
     restaurant = models.ForeignKey(Restaurant, blank = False, verbose_name = u"餐厅")
@@ -105,3 +113,15 @@ class Order(models.Model):
             return u"none"
         return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.end_timestamp))
     get_end_time.short_description = u"到餐时间"
+    
+    def delete(self, *args, **kwargs):
+        """ to override builtin delete method
+        """
+        # update owners last order information
+        for user in self.owners.all():
+            profile = user.get_profile()
+            profile.last_order_timestamp = 0
+            profile.last_order = None
+            profile.save()
+        super(Order, self).delete(*args, **kwargs)
+        

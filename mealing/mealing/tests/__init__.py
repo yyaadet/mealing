@@ -33,6 +33,9 @@ LIST_OF_DOCTESTS = [
     "mealing.forms.order",
     # templatetags
     "mealing.templatetags.common",
+    # utils
+    "mealing.utils.email",
+    "mealing.utils.date",
 ]
 
 LIST_OF_UNITTESTS = [

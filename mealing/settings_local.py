@@ -71,6 +71,7 @@ EMAIL_HOST_USER = ""
 EMAIL_PORT = 25
 EMAIL_SUBJECT_PREFIX = "[mealing]"
 EMAIL_USE_TLS = False
+EMAIL_FROM = "mealing@funshion.com"
 
 """app settings
 """

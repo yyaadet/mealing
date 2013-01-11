@@ -48,6 +48,21 @@ set([])
 >>> resp = c.get("/order/today/")
 >>> print resp.status_code
 200
+
+######## test delete()
+>>> order = Order.objects.get(pk = u.get_profile().last_order.id)
+>>> order.add_timestamp -= 60*60*24
+>>> order.save()
+>>> resp = c.get("/order/del/%d/" % order.id)
+>>> user = DjangoUser.objects.get(pk = u.id)
+>>> print user.get_profile().last_order != None
+True
+>>> order.add_timestamp += 60*60*24
+>>> order.save()
+>>> resp = c.get("/order/del/%d/" % order.id)
+>>> user = DjangoUser.objects.get(pk = u.id)
+>>> print user.get_profile().last_order
+None
 """
 
 
@@ -62,7 +77,7 @@ from django.http import Http404
 from django.contrib import messages
 from mealing.views.decorator import render_json, render_template
 from mealing.models import Menu, Config, Order
-from mealing.utils import is_same_day
+from mealing.utils import is_same_day, is_today
 from mealing.forms import CommitOrderForm
 import logging
 import types
@@ -182,7 +197,7 @@ def ready(request, page = 1):
                 menu.save()
             # clear session
             request.session["menus"] = set()
-            return redirect("/")       
+            return redirect("/order/%d/" % order.id)       
     else:
         form = CommitOrderForm()
     return render_template("order_ready.html", 
@@ -219,3 +234,24 @@ def today(request, page = 1):
     return render_template("order_today.html", 
                            {"orders_page": orders_page, "today": today, "total_price": total_price}, 
                            request)
+
+    
+def delete(request, order_id = 0):
+    """ to delete order by self, who is sponsor
+    """
+    order = Order.objects.get(pk = order_id)
+    if not order:
+        raise Http404
+    if order.sponsor != request.user:
+        messages.warning(request, u"订单不是你发起的，无权删除")
+        return redirect("/user/")
+    config = Config.get_default()
+    if _is_order_shutdown(request, config) is True:
+        messages.warning(request, u"订餐系统关闭中，暂时不能删除")
+        return redirect("/user/")
+    if is_today(datetime.datetime(1, 1, 1).fromtimestamp(order.add_timestamp)) is False:
+        logging.debug("order %d is out of time" % order.id)
+        messages.warning(request, u"订单已经过期，不允许删除，请联系管理员")
+        return redirect("/user/")
+    order.delete()
+    return redirect("/user/")

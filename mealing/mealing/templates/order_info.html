@@ -2,7 +2,7 @@
 {% load static %}
 {% load common %}
 
-{% block tabs %} {% nav "餐厅" %} {% endblock %}
+{% block tabs %} {% nav "personal" %} {% endblock %}
 
 {% block content %}
 
@@ -14,6 +14,7 @@
   <li>未选餐厅 <span class="divider">/</span></li>
   {% endif %}
   <li class="active">总费用：￥{{order.price}} </li>
+  {% if request.user == order.sponsor %}<li><a class="btn btn-primary btn-mini" href="{% url del_order order.id %}">取消订餐</a></li>{% endif %}
 </ul>
 
 <table class="table table-striped">
