@@ -1,5 +1,7 @@
 <div class="pagination pagination-right">
+  
   <ul>
+  	  <li><span>总条目 {{pager.paginator.count}}</span></li>
   {% for i in pager.paginator.page_range %}
       {% if i == pager.number %}
       <li class="active"><a href="{{prefix}}/{{i}}/">{{ i }}</a></li> 
