@@ -1,22 +1,6 @@
 #!/bin/env python
 # coding=utf-8
 '''restaurant model definition.
->>> from mealing.models.restaurant import Restaurant
-
-#create some restaurants
->>> r1 = Restaurant(name = u"test1", phone1 = u"12222", address = u"good", tips = u"test")
->>> r1.save()
->>> print r1
-test1
->>> r1.add_timestamp = 0
->>> print r1.readable_add_timestamp()
-1970-01-01 08:00:00
->>> print r1.get_menu_num()
-0
->>> r1.add_order_number(10)
->>> r1.save()
->>> print r1.order_number
-10
 '''
 
 __author__ = 'pengxt <164504252@qq.com>'
@@ -30,7 +14,26 @@ import datetime
 
 class Restaurant(models.Model):
     """ A Restaurant object
-
+    
+    #create some restaurants
+    >>> r1 = Restaurant(name = u"test1", phone1 = u"12222", address = u"good", tips = u"test")
+    >>> r1.save()
+    >>> print r1
+    test1
+    >>> r1.add_timestamp = 0
+    >>> print r1.readable_add_timestamp()
+    1970-01-01 08:00:00
+    >>> print r1.get_menu_num()
+    0
+    >>> r1.add_order_number(10)
+    >>> r1.save()
+    >>> print r1.order_number
+    10
+    >>> print r1.get_avg_price()
+    0
+    >>> menu = Menu.objects.create(name = "menu1", price = 20, restaurant = r1)
+    >>> print r1.get_avg_price()
+    20
     """
     name = models.CharField(blank = False, max_length = 60, verbose_name = u"名称")
     phone1 = models.CharField(blank = False, max_length = 60, verbose_name = u"电话1")
@@ -79,6 +82,18 @@ class Restaurant(models.Model):
             self.order_number += number
             self.order_number_today = number
             self.last_order_timestamp = int(time.time())
+            
+    def get_avg_price(self):
+        """ get avg price of all menus 
+        """
+        menus = Menu.objects.filter(restaurant = self)
+        if len(menus) is 0:
+            return 0
+        total_price = 0
+        for menu in menus:
+            total_price += menu.price
+        return total_price / len(menus)
+    get_avg_price.short_description= u"平均价格"
     
 class Menu(models.Model):
     """ menu of restaurant

@@ -25,16 +25,10 @@
 			<div class="span4">
 				<ul>
 					{% if rest.tips %}<li class="text-warning">{{ rest.tips }}</li>{% endif %}
-					{% if rest.max_person_everyday > 0 %}
-			      	<li>
-			      	每日最大订餐人：{{ rest.max_person_everyday }}
-			      	</li>
-			      	{% endif %}
+			      	<li>菜品平均价格：￥{{rest.get_avg_price}}</li>
 			      	<li>订餐次数：{{ rest.order_number }}</li>
 			      	{% if rest.max_person_everyday > 0 %}
-			      	<li>
-			      	每日最大订餐人：{{ rest.max_person_everyday }}
-			      	</li>
+			      	<li>每日最大订餐人：{{ rest.max_person_everyday }}</li>
 			      	{% endif %}	
 			      	<li>{{rest.address}}</li>
 				</ul>
