@@ -6,37 +6,46 @@
 
 {% block content %}
 
-<div class="row">
+
 {% for rest in restaurants_page.object_list %}
-<div class="span3">
-<ul class="thumbnails">
-  <li class="span3">
-    <div class="thumbnail">
-      <img data-src="{% static 'js/holder.js/260x180/text:完善中...' %}" alt="">
-      <h3>{{rest.name}}</h3>
-      <p>
-      	{% if rest.tips %} {{ rest.tips }} <br />{% endif %}
-      	{% if rest.max_person_everyday > 0 %}
-      	每日最大订餐人：{{ rest.max_person_everyday }} <br />
-      	{% endif %}
-      	订餐次数：{{ rest.order_number }} <br />
-      	地址：{{rest.address}} <br />
-      	电话1：{{rest.phone1}} <br />
-      	{% if rest.phone2 %}
-      	电话2：{{rest.phone2}} <br />
-      	{% endif %}
-      	{% if rest.phone3 %}
-      	电话2：{{rest.phone3}} <br />
-      	{% endif %}
-      	共有 {{rest.get_menu_num}} 种菜单
-      </p>
-      <a href="{% url restaurant_all_menu rest.id rest.name 1 %}" class="btn btn-mini">查看菜单</a>
-    </div>
-  </li>
-</ul>
+<div class="row">
+	<div class="span3">
+		<ul class="thumbnails">
+		  <li class="span3">
+		    <div class="thumbnail">
+		      <img data-src="{% static 'js/holder.js/260x180/text:完善中...' %}" alt="">
+		      
+		    </div>
+		  </li>
+		</ul>
+	</div>
+	<div class="span9">
+		<h3>{{rest.name}}</h3>
+		<a href="{% url restaurant_all_menu rest.id rest.name 1 %}" class="btn btn-mini">查看菜单</a>
+		{% if rest.tips %}<div class="row"><div class="span9"> {{ rest.tips }} </div></div>{% endif %}
+      	<div class="row">
+	      	{% if rest.max_person_everyday > 0 %}
+	      	<div class="span3">
+	      	每日最大订餐人：{{ rest.max_person_everyday }}
+	      	</div>
+	      	{% endif %}	
+	      	<div class="span3">订餐次数：{{ rest.order_number }}</div>	
+	      	<div class="span3">共有 {{rest.get_menu_num}} 种菜单</div>
+      	</div>
+      	<div class="row">
+      		<div class="span3">电话1：{{rest.phone1}}</div>
+      		{% if rest.phone2 %}
+      		<div class="span3">电话2：{{rest.phone2}}</div>
+      		{% endif %}
+      		{% if rest.phone3 %}
+      		<div class="span3">电话3：{{rest.phone3}}</div>
+      		{% endif %}
+      	</div>
+      	<div class="row"><div class="span9">{{rest.address}}</div></div>
+      	
+	</div>
 </div>
 {% endfor %}
-</div>
 
 {% pagination restaurants_page "/restaurant/all" %}
 {% endblock %}
