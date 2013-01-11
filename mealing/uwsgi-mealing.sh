@@ -9,7 +9,7 @@
 #
 
 name=uwsgi-mealing
-PID=/var/run/uwsgi-mealing.pid
+PID=/tmp/uwsgi-mealing.pid
 command=/usr/bin/uwsgi
 PORT=3051
 LOGFILE=/home/web_log/uwsgi-mealing.log
@@ -47,7 +47,7 @@ wait_for_pid () {
 case "$1" in
     start)
         echo -n "Starting $name " 
-        $command -w ${HOME}/app_uwsgi -M -p 4 --socket :$PORT -d $LOGFILE --pidfile $PID --max-request 1024 --limit-post 1048576 --logdate --uid nginx --gid nginx --disable-logging
+        $command -w ${HOME}/app_uwsgi -M -p 4 --socket :$PORT -d $LOGFILE --pidfile $PID --max-request 1024 --limit-post 1048576 --logdate --uid tomcat --gid tomcat --disable-logging
 
         if [ "$?" != 0 ] ; then
             echo " failed" 
