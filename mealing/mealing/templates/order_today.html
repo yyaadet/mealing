@@ -22,11 +22,12 @@
 		<th>菜品</th>
 		<th>金额</th>
 		<th>订餐时间</th>
-		<th>到餐时间</th>
+		<th>来餐通知</th>
+		{% if request.user.is_superuser %}<th>通知</th>{% endif %}
 	</tr>
 	{% for order in orders_page.object_list %}
 	<tr>
-		<td>{{ order.id }}</td>
+		<td><a href="{% url order_info order.id %}">{{ order.id }}</a></td>
 		<td>{{ order.restaurant }}</td>
 		<td>{{ order.sponsor.get_profile.department }}</td>
 		<td>{{ order.sponsor.get_profile.real_name }}</td>
@@ -34,10 +35,32 @@
 		<td>{{ order.get_menus_string }}</td>
 		<td>￥{{ order.price }}</td>
 		<td>{{ order.get_add_time }}</td>
-		<td>{{ order.get_end_time }}</td>
+		{% if order.notify_number > 0 %}
+		<td>{{ order.notify_number }}</td>
+		{% else %}
+		<td>未到</td>
+		{% endif %}
+		{% if request.user.is_superuser %}<td><button onclick="notify_to_get_meal(this, '{{order.id}}')" class="btn btn-mini">通知取餐</button></td>{% endif %}
 	</tr>
 	{% endfor %}
 </table>
 
 {% pagination orders_page "/order/today" %}
+
+<div class="alert fade" id="alert_box">
+	some error here
+</div>	
+
+<script type="text/javascript">
+function notify_to_get_meal(button, order_id) {
+	$.getJSON("/order/notify/" + order_id + "/", {}, function(data){
+		if (data.ok) {
+			button.innerHTML = "通知取餐(" + data.notify_number +"次)";
+		} else {
+			$("#alert_box").attr("class", "alert");
+			$("#alert_box").html(data.reason);
+		}
+	});
+}	
+</script>
 {% endblock %}

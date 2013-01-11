@@ -63,6 +63,12 @@ True
 >>> user = DjangoUser.objects.get(pk = u.id)
 >>> print user.get_profile().last_order
 None
+
+
+########## test notify()
+>>> resp = c.get("/order/notify/%d/" % order.id)
+>>> print simplejson.loads(resp.content)["ok"]
+False
 """
 
 
@@ -77,7 +83,7 @@ from django.http import Http404
 from django.contrib import messages
 from mealing.views.decorator import render_json, render_template
 from mealing.models import Menu, Config, Order
-from mealing.utils import is_same_day, is_today
+from mealing.utils import is_same_day, is_today, send_mail
 from mealing.forms import CommitOrderForm
 import logging
 import types
@@ -255,3 +261,24 @@ def delete(request, order_id = 0):
         return redirect("/user/")
     order.delete()
     return redirect("/user/")
+
+
+@render_json
+def notify(request, order_id = 0):
+    """ to notify user, to get meal now
+    """
+    if request.user.is_superuser is False:
+        return {"ok": False, "reason": u"只有管理员有权限通知"}
+    order = Order.objects.get(pk = order_id)
+    if not order:
+        return {"ok": False, "reason": u"订餐不存在了"}
+    order.notify_number += 1
+    order.last_notify_datetime = datetime.datetime(1, 1, 1).today()
+    order.save()
+    # send email
+    to = [order.sponsor.email]
+    cc = [user.email for user in order.owners.all()]
+    subject = u"订单 #%d 已到" % order.id
+    msg = u"请到前台取餐"
+    send_mail(subject, msg, to, cc)
+    return {"ok": True, "notify_number": order.notify_number}

@@ -9,8 +9,10 @@ __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 from django.db import models
 from django.contrib.auth.models import User as DjangoUser
 from django.http import HttpRequest as request
-from restaurant import Restaurant, Menu
+from mealing.models.restaurant import Restaurant, Menu
+from mealing.utils import is_today
 import time
+import datetime
 
 class Order(models.Model):
     """ user order. don't allow order multiple restaurants.
@@ -45,6 +47,8 @@ class Order(models.Model):
     None
     >>> print user.get_profile().last_order_timestamp
     0
+    >>> print o.get_status() != ""
+    True
     """
     sponsor = models.ForeignKey(DjangoUser, blank = False, editable = False, verbose_name = u"订餐人")
     restaurant = models.ForeignKey(Restaurant, blank = False, verbose_name = u"餐厅")
@@ -53,6 +57,8 @@ class Order(models.Model):
     price = models.IntegerField(default = 0, editable = False, verbose_name = u"总价格")
     add_timestamp = models.IntegerField(default = (lambda: int(time.time())), editable = False, verbose_name = u"下单时间")
     end_timestamp = models.IntegerField(default = 0, editable = False, verbose_name = u"结束订单时间")
+    notify_number = models.IntegerField(default = 0, editable = False)
+    last_notify_datetime = models.DateTimeField(auto_now = True, editable = False)
     
     class Meta:
         app_label = "mealing"
@@ -124,4 +130,14 @@ class Order(models.Model):
             profile.last_order = None
             profile.save()
         super(Order, self).delete(*args, **kwargs)
-        
+    
+    def get_status(self):
+        """ to get readable status
+        """
+        if is_today(datetime.datetime(1, 1, 1).fromtimestamp(self.add_timestamp)) is False:
+            return u"已过期"
+        elif self.notify_number > 0:
+            return u"餐已经到了"
+        else:
+            return u"未到"
+    get_status.short_description = u"订餐状态"

@@ -15,9 +15,18 @@ __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import EmailMessage
 from django.conf import settings
+import threading
 
 def send_mail(subject, msg, to, cc):
     """ to send text email
+    """
+    thread = threading.Thread(target = _send_mail_thread, args = (subject, msg, to , cc))
+    thread.start()
+    thread.run()
+    
+    
+def _send_mail_thread(subject, msg, to, cc):
+    """ run in thread
     """
     email = EmailMessage(subject, msg, settings.EMAIL_FROM, 
                          to, [], cc = cc)

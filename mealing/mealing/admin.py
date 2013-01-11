@@ -36,6 +36,7 @@ class OrderAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
     
+    
 class ConfigAdmin(admin.ModelAdmin):
     
     def has_add_permission(self, request):

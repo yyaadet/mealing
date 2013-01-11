@@ -31,6 +31,12 @@
 </table>
 
 <div class="row">
+	<div class="span2">订单状态：</div>
+	<div class="span8 text-error">
+		{{ order.get_status }}
+	</div>
+</div>
+<div class="row">
 	<div class="span2">领餐人：</div>
 	<div class="span8">
 		{% for owner in order.owners.all %}
@@ -49,6 +55,13 @@
 	<div class="span8">
 		{{ order.sponsor }}
 	</div>
+</div>
+<div class="row">
+	<div class="span2">通知领餐：</div>
+	<div class="span1">
+		{{ order.notify_number }}次 
+	</div>
+	<div class="span7">{{ order.last_notify_datetime }}</div>
 </div>
 
 {% endblock %}
