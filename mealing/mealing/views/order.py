@@ -114,7 +114,7 @@ def _is_order_shutdown(request, config):
                                           config.shutdown_order_hour, config.shutdown_order_minu)
     if now > shutdown_datetime:
         logging.debug("order time is pass")
-        messages.warning(request, u"订餐时间已过，请于 %2d:%2d 前完成订餐" % 
+        messages.warning(request, u"订餐时间已过，请于 %02d:%02d 前完成订餐" % 
                          (config.shutdown_order_hour, config.shutdown_order_minu))
         return True
     return False
@@ -207,7 +207,7 @@ def ready(request, page = 1):
             request.session["menus"] = set()
             return redirect("/order/%d/" % order.id)       
     else:
-        form = CommitOrderForm()
+        form = CommitOrderForm({"receivers": request.user.username})
     return render_template("order_ready.html", 
                            {"menus_page": menus_page, "restaurant": restaurant, 
                             "total_price": total_price, "form": form}, 

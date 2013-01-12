@@ -38,9 +38,9 @@
 				<ul>
 				  <li>共有 {{rest.get_menu_num}} 菜品</li>
 				  <li>
-		      		电话：{{rest.phone1}}, 
-		      		{% if rest.phone2 %}{{rest.phone2}}, {% endif %}
-		      		{% if rest.phone3 %}{{rest.phone3}}{% endif %}
+		      		电话：{{rest.phone1|phone2numeric}}, 
+		      		{% if rest.phone2 %}{{rest.phone2|phone2numeric}}, {% endif %}
+		      		{% if rest.phone3 %}{{rest.phone3|phone2numeric}}{% endif %}
 		      	  </li>
 		      	  <li>加入时间： {{ rest.readable_add_timestamp }}</li>
 				</ul>

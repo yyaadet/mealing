@@ -12,7 +12,7 @@ import logging
 
 from settings import *
 
-STATUS = "dev"  # test, dev, pro
+STATUS = "test"  # test, dev, pro
 
 DATABASES = {
     'default': {
