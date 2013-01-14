@@ -40,6 +40,11 @@ class Order(models.Model):
     >>> print o.is_end()
     False
     
+    ######### test get_today_restaurants()
+    >>> restaurants = Order.get_today_restaurants()
+    >>> print restaurants[0].name == r.name
+    True
+    
     ######### test delete()
     >>> o.delete()
     >>> user = DjangoUser.objects.get(pk = u.id)
@@ -49,6 +54,10 @@ class Order(models.Model):
     0
     >>> print o.get_status() != ""
     True
+    
+    
+    
+    
     """
     sponsor = models.ForeignKey(DjangoUser, blank = False, editable = False, verbose_name = u"订餐人")
     restaurant = models.ForeignKey(Restaurant, blank = False, verbose_name = u"餐厅")
@@ -64,6 +73,7 @@ class Order(models.Model):
         app_label = "mealing"
         verbose_name = u"订单"
         verbose_name_plural = u"订单"
+        ordering = ["restaurant", "add_timestamp"]
         
     def __unicode__(self):
         return u"%s: %s" % (self.sponsor.username, self.restaurant.name)
@@ -141,3 +151,13 @@ class Order(models.Model):
         else:
             return u"未到"
     get_status.short_description = u"订餐状态"
+    
+    @classmethod
+    def get_today_restaurants(cls):
+        """ get all restaurants of today
+        """
+        today = datetime.datetime(1, 1, 1).today().replace(hour = 0, minute = 0, second = 0)
+        today_timestamp = time.mktime(today.timetuple())
+        orders = cls.objects.filter(add_timestamp__gt = today_timestamp)
+        restaurants = [order.restaurant for order in orders]
+        return list(set(restaurants))

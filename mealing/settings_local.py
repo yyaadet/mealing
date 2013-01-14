@@ -77,4 +77,4 @@ EMAIL_FROM = "mealing@funshion.com"
 """
 APP_NAME = u"风行订餐"
 APP_DEVELOPER = u"pengxt <pengxt@funshion.com>"
-    
+RANK_TOP = 50    

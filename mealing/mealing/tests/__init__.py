@@ -20,6 +20,7 @@ LIST_OF_DOCTESTS = [
     "mealing.models.user",
     "mealing.models.config",
     "mealing.models",
+    "mealing.models.rank",
     # views
     "mealing.views.decorator",
     "mealing.views.home",
@@ -27,6 +28,7 @@ LIST_OF_DOCTESTS = [
     "mealing.views.restaurant",
     "mealing.views.menu",
     "mealing.views.order",
+    "mealing.views.rank",
     # forms
     "mealing.forms.user",
     "mealing.forms.base",
@@ -36,6 +38,10 @@ LIST_OF_DOCTESTS = [
     # utils
     "mealing.utils.email",
     "mealing.utils.date",
+    # ranks
+    "mealing.ranks.temperature",
+    "mealing.ranks.wilson",
+    "mealing.ranks.bayesian",
 ]
 
 LIST_OF_UNITTESTS = [

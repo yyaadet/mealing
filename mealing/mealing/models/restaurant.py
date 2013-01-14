@@ -118,6 +118,7 @@ class Menu(models.Model):
     price = models.IntegerField(default = 0, verbose_name = u"价格")
     add_timestamp = models.IntegerField(default = (lambda: int(time.time())), editable = False)
     order_number = models.IntegerField(default = 0, editable = False, verbose_name = u"被订次数")
+    last_order_datetime = models.DateTimeField(auto_now = True, editable = False)
     
     class Meta:
         """ meta class

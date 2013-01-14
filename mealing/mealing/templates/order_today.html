@@ -8,48 +8,61 @@
 
 <ul class="breadcrumb">
   <li><a href="{% url restaurant_all 1%}">全部餐厅</a> <span class="divider">/</span></li>
+  {% if restaurant %}
+  <li><a href="{% url restaurant_all_menu restaurant.id restaurant.name 1 %}">{{ restaurant.name }}</a> <span class="divider">/</span></li>
+  {% endif %}
   <li>{{ today|date }} <span class="divider">/</span></li>
   <li class="active">总价格：￥{{ total_price }}</li>
 </ul>
 
-<table class="table table-striped">
-	<tr>
-		<th>订餐号</th>
-		<th>餐厅</th>
-		<th>所属部门</th>
-		<th>订餐人</th>
-		<th>领餐人</th>
-		<th>菜品</th>
-		<th>金额</th>
-		<th>订餐时间</th>
-		<th>来餐通知</th>
-		{% if request.user.is_superuser %}<th>通知</th>{% endif %}
-	</tr>
-	{% for order in orders_page.object_list %}
-	<tr>
-		<td><a href="{% url order_info order.id %}">{{ order.id }}</a></td>
-		<td>{{ order.restaurant }}</td>
-		<td>{{ order.sponsor.get_profile.department }}</td>
-		<td>{{ order.sponsor.get_profile.real_name }}</td>
-		<td>{{ order.get_owners_string }}</td>
-		<td>{{ order.get_menus_string }}</td>
-		<td>￥{{ order.price }}</td>
-		<td>{{ order.get_add_time }}</td>
-		{% if order.notify_number > 0 %}
-		<td>{{ order.notify_number }}</td>
-		{% else %}
-		<td>未到</td>
-		{% endif %}
-		{% if request.user.is_superuser %}<td><button onclick="notify_to_get_meal(this, '{{order.id}}')" class="btn btn-mini">通知取餐</button></td>{% endif %}
-	</tr>
-	{% endfor %}
-</table>
+<div class="row">
+	<div class="span2">
+		{% restaurant_list restaurant restaurants %}
+	</div>
+	<div class="span10">
+		<table class="table table-striped">
+			<tr>
+				<th>编号</th>
+				<th>订餐号</th>
+				<th>餐厅</th>
+				<th>所属部门</th>
+				<th>订餐人</th>
+				<th>领餐人</th>
+				<th>菜品</th>
+				<th>金额</th>
+				<th>订餐时间</th>
+				<th>来餐通知</th>
+				{% if request.user.is_superuser %}<th>通知</th>{% endif %}
+			</tr>
+			{% for order in orders_page.object_list %}
+			<tr>
+				<td>{{ order.index }}</td>
+				<td><a href="{% url order_info order.id %}">{{ order.id }}</a></td>
+				<td>{{ order.restaurant }}</td>
+				<td>{{ order.sponsor.get_profile.department }}</td>
+				<td>{{ order.sponsor.get_profile.real_name }}</td>
+				<td>{{ order.get_owners_string }}</td>
+				<td>{{ order.get_menus_string }}</td>
+				<td>￥{{ order.price }}</td>
+				<td>{{ order.get_add_time }}</td>
+				{% if order.notify_number > 0 %}
+				<td>{{ order.notify_number }}</td>
+				{% else %}
+				<td>未到</td>
+				{% endif %}
+				{% if request.user.is_superuser %}<td><button onclick="notify_to_get_meal(this, '{{order.id}}')" class="btn btn-mini">通知取餐</button></td>{% endif %}
+			</tr>
+			{% endfor %}
+		</table>
+		
+		{% pagination orders_page prefix %}
+		
+		<div class="alert fade" id="alert_box">
+			some error here
+		</div>	
+	</div>
+</div>
 
-{% pagination orders_page "/order/today" %}
-
-<div class="alert fade" id="alert_box">
-	some error here
-</div>	
 
 <script type="text/javascript">
 function notify_to_get_meal(button, order_id) {

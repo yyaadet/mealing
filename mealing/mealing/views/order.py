@@ -5,12 +5,13 @@
 >>> from django.test.client import Client
 >>> from django.utils import simplejson
 >>> from mealing.models import Restaurant, Menu, Config
+>>> from mealing.utils import is_today
 >>> from django.contrib.auth.models import User as DjUser
 >>> import datetime
 >>> config = Config.get_default()
 >>> now = datetime.datetime(1, 1, 1).today()
 
-# test ready()
+################# test ready()
 >>> c = Client()
 >>> u = DjUser.objects.create_user("test_order", "test_order@funshion.com", "test_order")
 >>> c.login(username = "test_order", password = "test_order")
@@ -38,6 +39,8 @@ set([])
 >>> menu = Menu.objects.get(pk = menu.id)
 >>> print menu.order_number
 1
+>>> print is_today(menu.last_order_datetime)
+True
 
 # test info()
 >>> resp = c.get("/order/%d/" % u.get_profile().last_order.id)
@@ -46,6 +49,9 @@ set([])
 
 ######## test today() 
 >>> resp = c.get("/order/today/")
+>>> print resp.status_code
+200
+>>> resp = c.get("/order/today/%d/" % restaurant.id)
 >>> print resp.status_code
 200
 
@@ -82,7 +88,7 @@ from django.contrib.auth.models import User as DjangoUser
 from django.http import Http404
 from django.contrib import messages
 from mealing.views.decorator import render_json, render_template
-from mealing.models import Menu, Config, Order
+from mealing.models import Menu, Config, Order, Restaurant
 from mealing.utils import is_same_day, is_today, send_mail
 from mealing.forms import CommitOrderForm
 import logging
@@ -202,6 +208,7 @@ def ready(request, page = 1):
             # update menu information
             for menu in menus:
                 menu.order_number += len(receiver_names)
+                menu.last_order_datetime = datetime.datetime(1, 1, 1).today()
                 menu.save()
             # clear session
             request.session["menus"] = set()
@@ -221,12 +228,24 @@ def info(request, order_id = 0):
         raise Http404
     return render_template("order_info.html", {"order": order}, request)
 
-def today(request, page = 1):
+def today(request, restaurant_id = 0, page = 1):
     """ get today's order
     """
     today = datetime.datetime(1, 1, 1).today().replace(hour = 0, minute = 0, second = 0)
     today_timestamp = time.mktime(today.timetuple())
-    orders = Order.objects.filter(add_timestamp__gt = today_timestamp)
+    restaurants = Order.get_today_restaurants()
+    try:
+        restaurant = Restaurant.objects.get(id = restaurant_id)        
+    except Exception, e:
+        logging.warn("restaurant %d not exist" % restaurant_id)
+        restaurant = None
+
+    if not restaurant:
+        orders = Order.objects.filter(add_timestamp__gt = today_timestamp)
+        prefix = "/order/today"
+    else:
+        orders = Order.objects.filter(add_timestamp__gt = today_timestamp, restaurant = restaurant)
+        prefix = "/order/today/%d" % restaurant.id 
     total_price = 0
     for order in orders:
         total_price += order.price
@@ -239,8 +258,16 @@ def today(request, page = 1):
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         orders_page = paginator.page(paginator.num_pages)
+        
+    index = orders_page.start_index()
+    for order in orders_page:
+        order.index = index
+        index += 1
+        
     return render_template("order_today.html", 
-                           {"orders_page": orders_page, "today": today, "total_price": total_price}, 
+                           {"orders_page": orders_page, "today": today, 
+                            "total_price": total_price, "restaurant": restaurant, 
+                            "restaurants": restaurants, "prefix": prefix}, 
                            request)
 
     

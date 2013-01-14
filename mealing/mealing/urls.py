@@ -35,10 +35,13 @@ urlpatterns = patterns('',
     
     url(r"^order/ready/$", "mealing.views.order.ready", name = "order_ready"),
     url(r"^order/(?P<order_id>\d+)/$", "mealing.views.order.info", name = "order_info"),
-    url(r"^order/today/$", "mealing.views.order.today"),
-    url(r"^order/today/(?P<page>\d+)/$", "mealing.views.order.today", name = "order_today"),
+    url(r"^order/today/(?P<restaurant_id>\d+)/(?P<page>\d+)/$", "mealing.views.order.today", name = "order_today"),
+    url(r"^order/today/(?P<restaurant_id>\d+)/$", "mealing.views.order.today"),
+    url(r"^order/today/$", "mealing.views.order.today", name = "order_today_all"),
     url(r"^order/del/(?P<order_id>\d+)/$", "mealing.views.order.delete", name = "del_order"),
     url(r"^order/notify/(?P<order_id>\d+)/$", "mealing.views.order.notify", name = "notify_order"),
+    
+    url(r"^rank/pop_menu/$", "mealing.views.rank.pop_menu", name = "rank_pop_menu"),
     # url(r'^mealing/', include('mealing.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

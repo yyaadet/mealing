@@ -48,4 +48,4 @@ EMAIL_USE_TLS = False
 """
 APP_NAME = u"风行订餐"
 APP_DEVELOPER = u"pengxt <pengxt@funshion.com>"
-    
+RANK_TOP = 50    

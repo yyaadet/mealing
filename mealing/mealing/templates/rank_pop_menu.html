@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load common %}
+
+
+{% block tabs %} {% nav "排行榜" %} {% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<div class="span2">{% nav_list "流行菜品" %}</div>
+	<div class="span10">
+		<table class="table table-striped">
+			<tr>
+				<th>排名</th>
+				<th>菜品</th>
+				<th>最近一次订餐</th>
+			</tr>
+			{% for rank in ranks %}
+			<tr>
+				<td>{{ rank.id }}</td>
+				<td>{{ rank.menu.name }}</td>
+				<td>{{ rank.menu.last_order_datetime }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+</div>
+
+{% endblock %}

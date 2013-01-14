@@ -1,0 +1,15 @@
+<ul class="nav nav-list">
+	<li class="nav-header">餐厅列表</li>
+	{% if restaurant == None %}
+	<li class="active"><a href="/order/today/">全部餐厅订单</a></li>
+	{% else %}
+	<li><a href="/order/today/">全部餐厅订单</a></li>
+	{% endif %}
+{% for rest in restaurants %}
+    {% ifequal restaurant.id rest.id %}
+    <li class="active"><a href="#">{{ rest.name }}</a></li>
+    {% else %}     
+    <li><a href="{{ rest.url }}">{{ rest.name }}</a></li>
+    {% endifequal %}
+ {% endfor %} 
+ </ul>

@@ -16,6 +16,7 @@ from department import Department
 from order import Order
 from user import UserProfile
 from config import Config
+from rank import PopMenuRank, NewlyMenuRank
 import datetime
 
 # definition of UserProfile from above
