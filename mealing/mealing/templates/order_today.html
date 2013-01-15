@@ -20,6 +20,9 @@
 		{% restaurant_list restaurant restaurants %}
 	</div>
 	<div class="span10">
+		{% if restaurant and request.user.is_superuser %}
+		<p><button class="btn btn-primary" title="将会通知到该餐厅的所有订餐人" onclick="notify_all_to_get_meal(this, {{restaurant.id}})">一键通知</button></p>
+		{% endif %}
 		<table class="table table-striped">
 			<tr>
 				<th>编号</th>
@@ -66,6 +69,7 @@
 
 <script type="text/javascript">
 function notify_to_get_meal(button, order_id) {
+	button.disabled = "disabled";
 	$.getJSON("/order/notify/" + order_id + "/", {}, function(data){
 		if (data.ok) {
 			button.innerHTML = "通知取餐(" + data.notify_number +"次)";
@@ -73,7 +77,21 @@ function notify_to_get_meal(button, order_id) {
 			$("#alert_box").attr("class", "alert");
 			$("#alert_box").html(data.reason);
 		}
+		button.disabled = "";
 	});
 }	
+
+function notify_all_to_get_meal(button, restaurant_id) {
+	button.disabled = "disabled";
+	$.getJSON("/order/notify/restaurant/" + restaurant_id + "/", {}, function(data){
+		if (data.ok) {
+			button.innerHTML = "一键通知(Done)";
+		} else {
+			$("#alert_box").attr("class", "alert");
+			$("#alert_box").html(data.reason);
+		}
+		button.disabled = "";
+	});
+}
 </script>
 {% endblock %}

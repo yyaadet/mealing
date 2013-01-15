@@ -24,6 +24,7 @@ class PopMenuRank(models.Model):
     
     class Meta:
         app_label = "mealing"
+        ordering = ["id"]
         
 class NewlyMenuRank(models.Model):
     """ use id as rank. use add time as key params, ranked by temperature algorithm.

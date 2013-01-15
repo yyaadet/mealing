@@ -42,6 +42,8 @@ LIST_OF_DOCTESTS = [
     "mealing.ranks.temperature",
     "mealing.ranks.wilson",
     "mealing.ranks.bayesian",
+    # managements 
+    "mealing.management.commands.rank",
 ]
 
 LIST_OF_UNITTESTS = [

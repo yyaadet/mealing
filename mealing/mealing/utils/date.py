@@ -9,6 +9,15 @@ False
 >>> other1 = datetime.datetime(1, 1, 1)
 >>> print is_same_day(now, other1)
 True
+
+
+####### test datetime_to_timestamp()
+>>> timestamp = 0
+>>> dt = datetime.datetime(1, 1, 1).fromtimestamp(0)
+>>> print datetime_to_timestamp(dt) == 0
+True
+
+
 '''
 
 
@@ -17,6 +26,8 @@ __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 
 
 import datetime
+import time
+
 
 def is_same_day(date1, date2):
     """ date1 and date2 is datetime object
@@ -32,3 +43,17 @@ def is_today(date):
     if now.year == date.year and now.month == date.month and now.day == date.day:
         return True
     return False
+
+def datetime_to_timestamp(dt):
+    """ datetime object to timestamp
+    """
+    timestamp = time.mktime(dt.timetuple())
+    return timestamp
+
+
+def get_today_start_timestamp():
+    """ hour, minute, second is 0
+    """
+    today = datetime.datetime(1, 1, 1).today().replace(hour = 0, minute = 0, second = 0)
+    today_timestamp = datetime_to_timestamp(today)
+    return today_timestamp

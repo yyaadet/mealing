@@ -80,7 +80,7 @@ class NavListNode(template.Node):
         self._navs = [{"name": u"活跃用户", "url": "#"},
                       {"name": u"流行菜品", "url": "/rank/pop_menu/"},
                       {"name": u"新增菜品", "url": "/rank/newly_menu/"},
-                      {"name": u"Wilson菜品", "url": "/rank/wilson_menu/"},
+                      #{"name": u"Wilson菜品", "url": "/rank/wilson_menu/"},
                       ]
         
     def render(self, context):

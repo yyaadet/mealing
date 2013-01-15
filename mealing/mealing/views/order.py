@@ -55,6 +55,40 @@ True
 >>> print resp.status_code
 200
 
+
+########## test notify()
+>>> order = Order.objects.get(pk = u.get_profile().last_order.id)
+>>> resp = c.get("/order/notify/%d/" % order.id)
+>>> print simplejson.loads(resp.content)["ok"]
+False
+
+>>> user = DjangoUser.objects.get(pk = u.id)
+>>> user.is_superuser = True
+>>> user.save()
+>>> user = DjangoUser.objects.get(id = user.id)
+>>> print user.is_superuser
+True
+>>> c.logout()
+>>> c.login(username = user.username, password = user.username)
+True
+>>> resp = c.get("/order/notify/%d/" % order.id)
+>>> print simplejson.loads(resp.content)["ok"]
+True
+
+
+########## notify_restaurant()
+>>> c.logout()
+>>> resp = c.get("/order/notify/restaurant/%d/" % order.restaurant.id)
+>>> print simplejson.loads(resp.content)["ok"]
+False
+
+>>> c.login(username = user.username, password = user.username)
+True
+>>> resp = c.get("/order/notify/restaurant/%d/" % order.restaurant.id)
+>>> print simplejson.loads(resp.content)["ok"]
+True
+
+
 ######## test delete()
 >>> order = Order.objects.get(pk = u.get_profile().last_order.id)
 >>> order.add_timestamp -= 60*60*24
@@ -70,11 +104,6 @@ True
 >>> print user.get_profile().last_order
 None
 
-
-########## test notify()
->>> resp = c.get("/order/notify/%d/" % order.id)
->>> print simplejson.loads(resp.content)["ok"]
-False
 """
 
 
@@ -89,7 +118,7 @@ from django.http import Http404
 from django.contrib import messages
 from mealing.views.decorator import render_json, render_template
 from mealing.models import Menu, Config, Order, Restaurant
-from mealing.utils import is_same_day, is_today, send_mail
+from mealing.utils import is_same_day, is_today, send_mail, get_today_start_timestamp
 from mealing.forms import CommitOrderForm
 import logging
 import types
@@ -231,8 +260,7 @@ def info(request, order_id = 0):
 def today(request, restaurant_id = 0, page = 1):
     """ get today's order
     """
-    today = datetime.datetime(1, 1, 1).today().replace(hour = 0, minute = 0, second = 0)
-    today_timestamp = time.mktime(today.timetuple())
+    today_timestamp = get_today_start_timestamp()
     restaurants = Order.get_today_restaurants()
     try:
         restaurant = Restaurant.objects.get(id = restaurant_id)        
@@ -292,22 +320,53 @@ def delete(request, order_id = 0):
     return redirect("/user/")
 
 
-@render_json
-def notify(request, order_id = 0):
-    """ to notify user, to get meal now
+def _notify_order(order):
+    """ to notify order owners
     """
-    if request.user.is_superuser is False:
-        return {"ok": False, "reason": u"只有管理员有权限通知"}
-    order = Order.objects.get(pk = order_id)
     if not order:
-        return {"ok": False, "reason": u"订餐不存在了"}
+        return False
     order.notify_number += 1
     order.last_notify_datetime = datetime.datetime(1, 1, 1).today()
     order.save()
     # send email
     to = [order.sponsor.email]
     cc = [user.email for user in order.owners.all()]
-    subject = u"订单 #%d 已到" % order.id
+    if order.sponsor.email in cc:
+        cc.remove(order.sponsor.email)
+    subject = u"订餐 #%d 已到" % order.id
     msg = u"请到前台取餐"
     send_mail(subject, msg, to, cc)
+    return True
+
+@render_json
+def notify(request, order_id = 0):
+    """ to notify user, to get meal now
+    """
+    if request.user.is_superuser is False:
+        return {"ok": False, "reason": u"只有管理员有权限通知"}
+    try:
+        order = Order.objects.get(id = order_id)
+    except Exception, e:
+        logging.warn("some exception: %s" % e)
+        return {"ok": False, "reason": u"订餐不存在了"}
+    _notify_order(order)
     return {"ok": True, "notify_number": order.notify_number}
+
+@render_json
+def notify_restaurant(request, restaurant_id = 0):
+    """ notify all orders of restaurant
+    """
+    if request.user.is_superuser is False:
+        return {"ok": False, "reason": u"只有管理员有权限通知"}
+    try:
+       restaurant = Restaurant.objects.get(id = restaurant_id)
+    except Exception, e:
+        logging.debug("some exception: %s" % e)
+        return {"ok": False, "reason": u"餐厅不存在"}
+    today_timestamp = get_today_start_timestamp()
+    orders = Order.objects.filter(restaurant = restaurant, add_timestamp__gt = today_timestamp)
+    if not orders:
+        return {"ok": False, "reason": u"订餐不存在了"}
+    for order in orders:
+        _notify_order(order)
+    return {"ok": True}

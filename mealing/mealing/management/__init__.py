@@ -1,6 +1,6 @@
 #!/bin/env python
 # coding=utf-8
-''' custom commands
+''' custom managements
 '''
 
 __author__ = 'pengxt <164504252@qq.com>'

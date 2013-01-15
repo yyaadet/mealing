@@ -7,14 +7,14 @@
 {% block content %}
 
 <div class="row">
-	<div class="span2">{% nav_list "流行菜品" %}</div>
+	<div class="span2">{% nav_list "新增菜品" %}</div>
 	<div class="span10">
 		<table class="table table-striped">
 			<tr>
 				<th>排名</th>
 				<th>菜品</th>
 				<th>所属餐厅</th>
-				<th>最近一次订餐</th>
+				<th>添加时间</th>
 				<th>订餐人次</th>
 			</tr>
 			{% for rank in ranks %}
@@ -22,7 +22,7 @@
 				<td>{{ rank.id }}</td>
 				<td>{{ rank.menu.name }}</td>
 				<td>{{ rank.menu.restaurant.name }}</td>
-				<td>{{ rank.menu.last_order_datetime|default_if_none:"还没有人订过" }}</td>
+				<td>{{ rank.menu.readable_add_timestamp }}</td>
 				<td>{{ rank.menu.order_number }}</td>
 			</tr>
 			{% endfor %}

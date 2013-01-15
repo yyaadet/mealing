@@ -35,7 +35,7 @@ class Temperature(Base):
         
     @property
     def score(self):
-        if self.vote_number < 1:
+        if self.vote_number <= 1:
             self.vote_number += 2
         score = 1.0*(self.vote_number - 1) / pow(self.distance + 2, self.gravityth_power)
         return score
