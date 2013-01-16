@@ -333,8 +333,8 @@ def _notify_order(order):
     cc = [user.email for user in order.owners.all()]
     if order.sponsor.email in cc:
         cc.remove(order.sponsor.email)
-    subject = u"订餐 #%d 已到" % order.id
-    msg = u"请到前台取餐"
+    subject = u"您的订餐已到"
+    msg = u"请到前台询问后取餐"
     send_mail(subject, msg, to, cc)
     return True
 
