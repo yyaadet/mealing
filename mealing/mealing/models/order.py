@@ -10,7 +10,7 @@ from django.db import models
 from django.contrib.auth.models import User as DjangoUser
 from django.http import HttpRequest as request
 from mealing.models.restaurant import Restaurant, Menu
-from mealing.utils import is_today
+from mealing.utils import is_today, get_today_start_timestamp
 import time
 import datetime
 
@@ -45,6 +45,12 @@ class Order(models.Model):
     >>> print restaurants[0].name == r.name
     True
     
+    
+    ############# test get_today_orders()
+    >>> orders = Order.get_today_orders()
+    >>> print len(orders) > 0
+    True
+    
     ######### test delete()
     >>> o.delete()
     >>> user = DjangoUser.objects.get(pk = u.id)
@@ -54,9 +60,6 @@ class Order(models.Model):
     0
     >>> print o.get_status() != ""
     True
-    
-    
-    
     
     """
     sponsor = models.ForeignKey(DjangoUser, blank = False, editable = False, verbose_name = u"订餐人")
@@ -161,3 +164,23 @@ class Order(models.Model):
         orders = cls.objects.filter(add_timestamp__gt = today_timestamp)
         restaurants = [order.restaurant for order in orders]
         return list(set(restaurants))
+    
+    
+    @classmethod
+    def get_today_orders(cls, restaurant = None):
+        """ get today orders
+        """
+        today_timestamp = get_today_start_timestamp()
+        if not restaurant:
+            orders = Order.objects.filter(add_timestamp__gt = today_timestamp)
+        else:
+            orders = Order.objects.filter(add_timestamp__gt = today_timestamp, restaurant = restaurant)
+        return orders
+    
+    def get_position(self):
+        """ get position of restaurant's today orders
+        """
+        orders = Order.get_today_orders(self.restaurant)
+        pass
+        
+        

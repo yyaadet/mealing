@@ -35,7 +35,7 @@
 				<th>金额</th>
 				<th>订餐时间</th>
 				<th>来餐通知</th>
-				{% if request.user.is_superuser %}<th>通知</th>{% endif %}
+				{% if request.user.is_superuser and restaurant %}<th>通知</th>{% endif %}
 			</tr>
 			{% for order in orders_page.object_list %}
 			<tr>
@@ -53,7 +53,7 @@
 				{% else %}
 				<td>未到</td>
 				{% endif %}
-				{% if request.user.is_superuser %}<td><button onclick="notify_to_get_meal(this, '{{order.id}}')" class="btn btn-mini">通知取餐</button></td>{% endif %}
+				{% if request.user.is_superuser and restaurant %}<td><button onclick="notify_to_get_meal(this, '{{order.id}}')" class="btn btn-mini">通知取餐</button></td>{% endif %}
 			</tr>
 			{% endfor %}
 		</table>
