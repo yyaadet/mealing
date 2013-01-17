@@ -267,7 +267,7 @@ def info(request, order_id = 0):
 def today(request, restaurant_id = 0, page = 1):
     """ get today's order
     """
-    today_timestamp = get_today_start_timestamp()
+    today = datetime.datetime(1, 1, 1).today()
     restaurants = Order.get_today_restaurants()
     try:
         restaurant = Restaurant.objects.get(id = restaurant_id)        
@@ -276,10 +276,10 @@ def today(request, restaurant_id = 0, page = 1):
         restaurant = None
 
     if not restaurant:
-        orders = Order.objects.filter(add_timestamp__gt = today_timestamp)
+        orders = Order.get_today_orders()
         prefix = "/order/today"
     else:
-        orders = Order.objects.filter(add_timestamp__gt = today_timestamp, restaurant = restaurant)
+        orders = Order.get_today_orders(restaurant)
         prefix = "/order/today/%d" % restaurant.id 
     total_price = 0
     for order in orders:
