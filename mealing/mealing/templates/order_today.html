@@ -41,7 +41,7 @@
 			</tr>
 			{% for order in orders_page.object_list %}
 			<tr>
-				<td><a href="{% url order_info order.id %}">{{ order.index }}</a></td>
+				<td><a href="{% url order_info order.id %}">{{ order.today_id }}</a></td>
 				<td>{{ order.restaurant }}</td>
 				<td>{{ order.sponsor.get_profile.department }}</td>
 				<td>{{ order.sponsor.get_profile.real_name }}</td>
