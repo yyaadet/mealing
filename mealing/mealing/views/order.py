@@ -89,6 +89,13 @@ True
 True
 
 
+
+############## test export_today_orders()
+>>> resp = c.get("/order/export_today/")
+>>> print resp.status_code
+200
+
+
 ######## test delete()
 >>> order = Order.objects.get(pk = u.get_profile().last_order.id)
 >>> order.add_timestamp -= 60*60*24
@@ -116,7 +123,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User as DjangoUser
 from django.http import Http404
 from django.contrib import messages
-from mealing.views.decorator import render_json, render_template
+from mealing.views.decorator import render_json, render_template, render_csv
 from mealing.models import Menu, Config, Order, Restaurant
 from mealing.utils import is_same_day, is_today, send_mail, get_today_start_timestamp
 from mealing.forms import CommitOrderForm
@@ -287,11 +294,6 @@ def today(request, restaurant_id = 0, page = 1):
         # If page is out of range (e.g. 9999), deliver last page of results.
         orders_page = paginator.page(paginator.num_pages)
         
-    index = orders_page.start_index()
-    for order in orders_page:
-        order.index = index
-        index += 1
-        
     return render_template("order_today.html", 
                            {"orders_page": orders_page, "today": today, 
                             "total_price": total_price, "restaurant": restaurant, 
@@ -333,8 +335,8 @@ def _notify_order(order):
     cc = [user.email for user in order.owners.all()]
     if order.sponsor.email in cc:
         cc.remove(order.sponsor.email)
-    subject = u"您的订餐已到"
-    msg = u"请到前台询问后取餐"
+    subject = u"您的订餐 #%d 已到" % order.today_id
+    msg = u"%s 编号为%d" % (order.restaurant.name, order.today_id)
     send_mail(subject, msg, to, cc)
     return True
 
@@ -370,3 +372,20 @@ def notify_restaurant(request, restaurant_id = 0):
     for order in orders:
         _notify_order(order)
     return {"ok": True}
+
+
+@render_csv
+def export_today_orders(request):
+    """ export orders of today
+    """
+    today = datetime.datetime(1, 1, 1).today().strftime("%Y%m%d")
+    orders = Order.get_today_orders()
+    retv = []
+    retv.append([])
+    retv.append([u"日期", u"编号", u"餐厅", u"部门", u"订餐人", u"菜品", u"价格"])
+    total_price = 0
+    for order in orders:
+        retv.append([today, order.today_id, order.restaurant.name, order.get_department(), 
+                     order.get_owners_string(), order.get_menus_string(), order.price])
+    retv.insert(0, [u"总费用", total_price])
+    return "%s.csv" % today, retv

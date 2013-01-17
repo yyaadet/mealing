@@ -23,10 +23,12 @@
 		{% if restaurant and request.user.is_superuser %}
 		<p><button class="btn btn-primary" title="将会通知到该餐厅的所有订餐人" onclick="notify_all_to_get_meal(this, {{restaurant.id}})">一键通知</button></p>
 		{% endif %}
+		{% if not restaurant and request.user.is_superuser %}
+		<p><a class="btn btn-primary" title="导出今日的全部订餐" href="{% url export_today_orders %}">导出今日订餐</a></p>
+		{% endif %}
 		<table class="table table-striped">
 			<tr>
-				<th>编号</th>
-				<th>订餐号</th>
+				<th>今日编号</th>
 				<th>餐厅</th>
 				<th>所属部门</th>
 				<th>订餐人</th>
@@ -35,12 +37,11 @@
 				<th>金额</th>
 				<th>订餐时间</th>
 				<th>来餐通知</th>
-				{% if request.user.is_superuser and restaurant %}<th>通知</th>{% endif %}
+				{% if request.user.is_superuser %}<th>通知</th>{% endif %}
 			</tr>
 			{% for order in orders_page.object_list %}
 			<tr>
-				<td>{{ order.index }}</td>
-				<td><a href="{% url order_info order.id %}">{{ order.id }}</a></td>
+				<td><a href="{% url order_info order.id %}">{{ order.index }}</a></td>
 				<td>{{ order.restaurant }}</td>
 				<td>{{ order.sponsor.get_profile.department }}</td>
 				<td>{{ order.sponsor.get_profile.real_name }}</td>
@@ -53,7 +54,7 @@
 				{% else %}
 				<td>未到</td>
 				{% endif %}
-				{% if request.user.is_superuser and restaurant %}<td><button onclick="notify_to_get_meal(this, '{{order.id}}')" class="btn btn-mini">通知取餐</button></td>{% endif %}
+				{% if request.user.is_superuser %}<td><button onclick="notify_to_get_meal(this, '{{order.id}}')" class="btn btn-mini">通知取餐</button></td>{% endif %}
 			</tr>
 			{% endfor %}
 		</table>

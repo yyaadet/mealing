@@ -19,9 +19,8 @@ from config import Config
 from rank import PopMenuRank, NewlyMenuRank
 import datetime
 
-# definition of UserProfile from above
-# ...
 
+# definition of UserProfile from above
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)

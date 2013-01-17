@@ -15,6 +15,10 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.utils import simplejson
+from django.utils.encoding import smart_str
+import csv, codecs, cStringIO
+import types
+
 
 def render_template(template, kwargs = {}, request = None):
     """ render template
@@ -43,4 +47,24 @@ def render_json(view_func):
         else:
             json = simplejson.dumps(retval)
             return HttpResponse(json, mimetype='application/json')
+    return wrap
+
+def render_csv(view_func, encoding = "gbk"):
+    """ render http response to csv
+    """
+    def wrap(request, *args, **kwargs):
+        # data_list is list of list, for example [["a", "b"], ["a1", "a2"]]
+        attachment_name, data_list = view_func(request, *args, **kwargs)
+        response = HttpResponse(mimetype = "text/csv")
+        response['Content-Disposition'] = u"attachment; filename=\"%s\"" % attachment_name
+        writer = csv.writer(response)
+        for data in data_list:
+            row = []
+            for cell in data:
+                if not isinstance(cell, types.UnicodeType):
+                    row.append(smart_str(u"%s" % cell, encoding = encoding))
+                else:
+                    row.append(smart_str(cell, encoding = encoding))
+            writer.writerow(row)
+        return response
     return wrap

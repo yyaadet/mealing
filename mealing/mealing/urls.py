@@ -41,6 +41,7 @@ urlpatterns = patterns('',
     url(r"^order/del/(?P<order_id>\d+)/$", "mealing.views.order.delete", name = "del_order"),
     url(r"^order/notify/(?P<order_id>\d+)/$", "mealing.views.order.notify", name = "notify_order"),
     url(r"^order/notify/restaurant/(?P<restaurant_id>\d+)/$", "mealing.views.order.notify_restaurant", name = "notify_restaurant_order"),
+    url(r"^order/export_today/$", "mealing.views.order.export_today_orders", name = "export_today_orders"),
     
     url(r"^rank/pop_menu/$", "mealing.views.rank.pop_menu", name = "rank_pop_menu"),
     url(r"^rank/newly_menu/$", "mealing.views.rank.newly_menu", name = "rank_newly_menu"),

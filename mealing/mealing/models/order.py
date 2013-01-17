@@ -9,10 +9,14 @@ __status__ = 'Product'  # can be 'Product', 'Development', 'Prototype'
 from django.db import models
 from django.contrib.auth.models import User as DjangoUser
 from django.http import HttpRequest as request
+from django.db.models.signals import post_save
 from mealing.models.restaurant import Restaurant, Menu
 from mealing.utils import is_today, get_today_start_timestamp
 import time
 import datetime
+
+
+
 
 class Order(models.Model):
     """ user order. don't allow order multiple restaurants.
@@ -51,6 +55,17 @@ class Order(models.Model):
     >>> print len(orders) > 0
     True
     
+    
+    ############# test save()
+    >>> r2 = Restaurant.objects.create(name = "res2")
+    >>> m2 = Menu.objects.create(restaurant = r2, name = "menu", price = 10)
+    >>> order1 = Order.objects.create(sponsor = u, restaurant = r2)
+    >>> print order1.today_id
+    1
+    >>> order2 = Order.objects.create(sponsor = u, restaurant = r2)
+    >>> print order2.today_id
+    2
+    
     ######### test delete()
     >>> o.delete()
     >>> user = DjangoUser.objects.get(pk = u.id)
@@ -71,6 +86,7 @@ class Order(models.Model):
     end_timestamp = models.IntegerField(default = 0, editable = False, verbose_name = u"结束订单时间")
     notify_number = models.IntegerField(default = 0, editable = False)
     last_notify_datetime = models.DateTimeField(auto_now = True, editable = False)
+    today_id = models.IntegerField(default = 0, verbose_name = u"今日编号")
     
     class Meta:
         app_label = "mealing"
@@ -80,7 +96,8 @@ class Order(models.Model):
         
     def __unicode__(self):
         return u"%s: %s" % (self.sponsor.username, self.restaurant.name)
-    
+        
+            
     def sum_price(self):
         """ recalculation all menu price, then save to db
         """
@@ -177,10 +194,27 @@ class Order(models.Model):
             orders = Order.objects.filter(add_timestamp__gt = today_timestamp, restaurant = restaurant)
         return orders
     
-    def get_position(self):
-        """ get position of restaurant's today orders
+    def get_department(self):
+        """ get first owner's department
         """
-        orders = Order.get_today_orders(self.restaurant)
-        pass
+        owners = self.owners.all()
+        if not owners:
+            return u""
+        if not owners[0].get_profile().department:
+            return u""
+        return owners[0].get_profile().department.name
         
         
+def set_today_id(sender, instance, created, raw, using, **kwargs):
+    """ if today id is zero, to set it
+    """
+    order = instance
+    if order.today_id <= 0 and created is True:
+        today_timestamp = get_today_start_timestamp()
+        order_ahead_number = Order.objects.filter(add_timestamp__gte = today_timestamp, 
+                                      add_timestamp__lte = order.add_timestamp, 
+                                      restaurant = order.restaurant).count()
+        order.today_id = order_ahead_number
+        order.save()
+            
+post_save.connect(set_today_id, sender = Order)
