@@ -6,6 +6,7 @@
 from django import template
 from django.template import Context
 import logging
+import copy
 
 
 __author__ = 'pengxt <164504252@qq.com>'
@@ -59,40 +60,40 @@ def do_nav_list(parser, token):
     """
     try:
         # split_contents() knows not to split quoted strings.
-        tag_name, nav = token.split_contents()
+        tag_name, nav, navs, nav_header = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError("%r tag requires a single argument" % token.contents.split()[0]) 
     if not (nav[0] == nav[-1] and nav[0] in ('"', "'")):
         raise template.TemplateSyntaxError("%r tag's argument should be in quotes" % tag_name)
-    return NavListNode(nav[1:-1])
+    return NavListNode(nav[1:-1], navs, nav_header)
 
 class NavListNode(template.Node):
     """ render nav list template tag
     """
-    def __init__(self, cur_nav): 
+    def __init__(self, cur_nav, navs, nav_header): 
         """ init function
         
         Args:
             cur_tab: current page tab
+            navs: all navigators. format is [{"name": "", "url": ""}, ...]
+            nav_header: nav list header
         """
-        self.nav_header = u"排行榜"
-        self._cur_nav = cur_nav
-        self._navs = [{"name": u"活跃用户", "url": "#"},
-                      {"name": u"流行菜品", "url": "/rank/pop_menu/"},
-                      {"name": u"新增菜品", "url": "/rank/newly_menu/"},
-                      #{"name": u"Wilson菜品", "url": "/rank/wilson_menu/"},
-                      ]
+        self.nav_header = template.Variable(nav_header)
+        self.cur_nav = cur_nav
+        self.navs = template.Variable(navs)
         
     def render(self, context):
         """ so import function. render tag now.
         """
         t = template.loader.get_template("tags/nav_list.html")
         navs = []
-        for nav in self._navs:
-            if nav["name"] == self._cur_nav:
-                nav["is_active"] = 1
-            navs.append(nav)
-        new_context = Context({'navs': navs, "nav_header": self.nav_header}, autoescape=context.autoescape)
+        for nav in self.navs.resolve(context):
+            new_nav = copy.deepcopy(nav)
+            if new_nav["name"] == self.cur_nav:
+                new_nav["is_active"] = 1
+            navs.append(new_nav)
+        new_context = Context({'navs': navs, "nav_header": self.nav_header.resolve(context)}, 
+                              autoescape=context.autoescape)
         return t.render(new_context)
     
 def do_restaurant_list(parser, token):

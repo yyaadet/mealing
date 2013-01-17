@@ -1,3 +1,5 @@
+#!/bin/env python
+# coding=utf-8
 # Django settings for mealing project.
 import os
 
@@ -124,9 +126,21 @@ INSTALLED_APPS = (
 
 AUTH_PROFILE_MODULE = 'mealing.UserProfile'
 
-if os.getenv('JENKINS_URL', False):
-    INSTALLED_APPS += ('django_jenkins', )
-    PROJECT_APPS = ('mealing_1.0', )
+###############################
+## app config 
+RANK_NAV_LIST = [{"name": u"活跃用户", "url": "#"},
+                 {"name": u"流行菜品", "url": "/rank/pop_menu/"},
+                 {"name": u"新增菜品", "url": "/rank/newly_menu/"},
+                ]
+RANK_NAV_HEAD = u"排行榜"
+
+USER_NAV_LIST = [{"name": u"基本信息", "url": "/user/"},
+                 {"name": u"密码修改", "url": "/change_password/"},
+                 {"name": u"属性设置", "url": "/change_info/"},
+                 ]
+USER_NAV_HEAD = u"个人中心"
+
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

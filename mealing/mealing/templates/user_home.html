@@ -1,45 +1,52 @@
 {% extends "base.html" %}
+{% load common %}
 
 {% block content %}
-<h3>{{request.user.username}} 的主页</h3>
+
 <div class="row">
-	
+	<div class="span2">
+		{% nav_list "基本信息" settings.USER_NAV_LIST settings.USER_NAV_HEAD %}
+	</div>
+	<div class="span10">
+		<h3>{{request.user.username}} 的主页</h3>
+		<div class="row">
+			<div class="span2">真实姓名</div>
+			<div class="span6">{{profile.real_name}}</div>
+		</div>
+		<div class="row">
+			<div class="span2">所属部门</div>
+			<div class="span8">{{profile.department}}</div>
+		</div>
+		<div class="row">
+			<div class="span2">加入时间</div>
+			<div class="span8">{{request.user.date_joined}}</div>
+		</div>
+		<div class="row">
+			<div class="span2">最后登录时间</div>
+			<div class="span8">{{request.user.last_login}}</div>
+		</div>
+		<div class="row">
+			<div class="span2">订餐次数</div>
+			<div class="span8">{{profile.order_number}}</div>
+		</div>
+		<div class="row">
+			<div class="span2">最后订餐时间</div>
+			<div class="span8">{{profile.get_last_order_time}}</div>
+		</div>
+		<div class="row">
+			<div class="span2">订单状态</div>
+			{% if profile.last_order.is_end %}
+			<div class="span1">已完成</div>
+			{% endif %}
+			{% if profile.last_order %}
+			<div class="span1"><a href="{% url order_info profile.last_order.id %}">查看订单</a></div>
+			{% else %}
+			<div class="span1"><a href="#">空订单</a></div>
+			{% endif %}
+			
+		</div>
+	</div>
 </div>
-<div class="row">
-	<div class="span2">真实姓名</div>
-	<div class="span8">{{profile.real_name}}</div>
-	<div class="span2"><a href="{% url change_info %}">个人信息设置</a></div>
-</div>
-<div class="row">
-	<div class="span2">所属部门</div>
-	<div class="span10">{{profile.department}}</div>
-</div>
-<div class="row">
-	<div class="span2">加入时间</div>
-	<div class="span10">{{request.user.date_joined}}</div>
-</div>
-<div class="row">
-	<div class="span2">最后登录时间</div>
-	<div class="span10">{{request.user.last_login}}</div>
-</div>
-<div class="row">
-	<div class="span2">订餐次数</div>
-	<div class="span10">{{profile.order_number}}</div>
-</div>
-<div class="row">
-	<div class="span2">最后订餐时间</div>
-	<div class="span10">{{profile.get_last_order_time}}</div>
-</div>
-<div class="row">
-	<div class="span2">订单状态</div>
-	{% if profile.last_order.is_end %}
-	<div class="span1">已完成</div>
-	{% endif %}
-	{% if profile.last_order %}
-	<div class="span1"><a href="{% url order_info profile.last_order.id %}">查看订单</a></div>
-	{% else %}
-	<div class="span1"><a href="#">空订单</a></div>
-	{% endif %}
-	
-</div>
+
+
 {% endblock %}
